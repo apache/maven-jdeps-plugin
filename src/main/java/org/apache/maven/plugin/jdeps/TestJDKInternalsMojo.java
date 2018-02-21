@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
@@ -42,7 +43,18 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 public class TestJDKInternalsMojo
     extends AbstractJDepsMojo
 {
-
+    /**
+     * Indicates whether the build will continue even if there are jdeps warnings.
+     */
+    @Parameter( defaultValue = "true", property = "jdeps.test.failOnWarning" )
+    private boolean failOnWarning;
+    
+    @Override
+    protected boolean isFailOnWarning()
+    {
+        return failOnWarning;
+    }
+    
     @Override
     protected String getClassesDirectory()
     {

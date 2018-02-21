@@ -77,7 +77,7 @@ public abstract class AbstractJDepsMojo
     /**
      * Indicates whether the build will continue even if there are jdeps warnings.
      */
-    @Parameter( defaultValue = "true" )
+    @Parameter( defaultValue = "true", property = "jdeps.failOnWarning" )
     private boolean failOnWarning;
     
     /**
@@ -231,7 +231,7 @@ public abstract class AbstractJDepsMojo
                    .append( " -> " ).append( offendingPackage.getValue() ).append( ls );
             }
             
-            if ( failOnWarning )
+            if ( isFailOnWarning() )
             {
                 throw new MojoExecutionException( msg.toString() );
             }
@@ -578,6 +578,11 @@ public abstract class AbstractJDepsMojo
         return tc;
     }
 
+    protected boolean isFailOnWarning()
+    {
+        return failOnWarning;
+    }
+    
     protected abstract String getClassesDirectory();
     
     protected abstract Collection<Path> getClassPath() throws DependencyResolutionRequiredException;
