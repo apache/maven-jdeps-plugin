@@ -81,6 +81,14 @@ public abstract class AbstractJDepsMojo
     private boolean failOnWarning;
     
     /**
+     * Specifies the version when processing multi-release JAR files version should be an integer >=9 or base.
+     * 
+     * @since 3.1.1
+     */
+    @Parameter
+    private String multiRelease;
+    
+    /**
      * Additional dependencies which should be analyzed besides the classes.
      * Specify as {@code groupId:artifactId}, allowing ant-pattern.
      * 
@@ -323,6 +331,12 @@ public abstract class AbstractJDepsMojo
         {
             cmd.createArg().setValue( "-m" );
             cmd.createArg().setValue( module );
+        }
+
+        if ( multiRelease != null )
+        {
+            cmd.createArg().setValue( "--multi-release" );
+            cmd.createArg().setValue( multiRelease );
         }
 
         if ( apiOnly )
