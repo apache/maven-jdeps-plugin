@@ -172,12 +172,12 @@ public abstract class AbstractJDepsMojo
     private boolean recursive;
 
     /**
-     * Show module containing the package
+     * Specifies the root module for analysis.
      * 
      * @since JDK 1.9.0
      */
-    @Parameter( defaultValue = "false", property = "jdeps.module" )
-    private boolean module;
+    @Parameter( property = "jdeps.module" )
+    private String module;
     
     @Component
     private ToolchainManager toolchainManager;
@@ -319,9 +319,10 @@ public abstract class AbstractJDepsMojo
             cmd.createArg().setValue( "-P" );
         }
         
-        if ( module )
+        if ( module != null )
         {
-            cmd.createArg().setValue( "-M" );
+            cmd.createArg().setValue( "-m" );
+            cmd.createArg().setValue( module );
         }
 
         if ( apiOnly )
