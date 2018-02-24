@@ -140,6 +140,15 @@ public abstract class AbstractJDepsMojo
     @Parameter( property = "jdeps.verbose" )
     private String verbose;
 
+    
+    /**
+     * Finds dependences matching the specified package name.
+     * 
+     * @since 3.1.1.
+     */
+    @Parameter
+    private List<String> packages;
+
 //    /**
 //     * A comma-separated list to find dependences in the given package (may be given multiple times)
 //     */
@@ -299,6 +308,15 @@ public abstract class AbstractJDepsMojo
         catch ( DependencyResolutionRequiredException e )
         {
             throw new MojoFailureException( e.getMessage(), e );
+        }
+        
+        if ( packages != null )
+        {
+            for ( String pkgName : packages )
+            {
+                cmd.createArg().setValue( "-p" );
+                cmd.createArg().setValue( pkgName );
+            }
         }
         
 //        if ( packageNames != null )
