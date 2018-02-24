@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.jdeps;
+package org.apache.maven.plugins.jdeps;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -43,7 +43,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.jdeps.consumers.JDepsConsumer;
+import org.apache.maven.plugins.jdeps.consumers.JDepsConsumer;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;

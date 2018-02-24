@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.jdeps.consumers;
+package org.apache.maven.plugins.jdeps.consumers;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,10 +18,8 @@ package org.apache.maven.plugin.jdeps.consumers;
  * specific language governing permissions and limitations
  * under the License.
  */
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
-
-import org.apache.maven.plugin.jdeps.consumers.JDepsConsumer;
 import org.junit.Test;
 
 public class JDepsConsumerTest
