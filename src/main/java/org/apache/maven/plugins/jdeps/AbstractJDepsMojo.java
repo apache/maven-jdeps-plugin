@@ -493,7 +493,17 @@ public abstract class AbstractJDepsMojo
         }
 
         
-        CommandLineUtils.StringStreamConsumer err = new CommandLineUtils.StringStreamConsumer();
+        CommandLineUtils.StringStreamConsumer err = new CommandLineUtils.StringStreamConsumer()
+        {
+            @Override
+            public void consumeLine( String line )
+            {
+                if ( !line.startsWith( "Picked up JAVA_TOOL_OPTIONS:" ) )
+                {
+                    super.consumeLine( line );
+                }
+            }
+        };
         CommandLineUtils.StringStreamConsumer out;
         if ( consumer != null )
         {
