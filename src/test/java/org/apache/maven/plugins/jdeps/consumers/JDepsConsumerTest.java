@@ -42,6 +42,21 @@ public class JDepsConsumerTest
         assertEquals( "JDK internal API (java.base)", consumer.getOffendingPackages().get( "sun.misc" ) );
         assertEquals( 0, consumer.getProfiles().size() );
     }
+    
+    @Test
+    public void testJDKInternalAPI_Linux_Java8()
+    {
+        consumer = new JDepsConsumer();
+        consumer.consumeLine( "classes -> JDK removed internal API" );
+        consumer.consumeLine( "classes -> java.base" );
+        consumer.consumeLine( "   <unnamed>                                          -> java.io                                            java.base" );
+        consumer.consumeLine( "   <unnamed>                                          -> java.lang                                          java.base" );
+        consumer.consumeLine( "   <unnamed>                                          -> sun.misc                                           JDK internal API (JDK removed internal API)" );
+        
+        assertEquals( 1, consumer.getOffendingPackages().size() );
+        assertEquals( "JDK internal API (JDK removed internal API)", consumer.getOffendingPackages().get( "sun.misc" ) );
+        assertEquals( 0, consumer.getProfiles().size() );
+    }
 
     @Test
     public void testProfile()
