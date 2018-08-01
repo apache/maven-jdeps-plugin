@@ -20,7 +20,7 @@
  
 def buildLog = new File( basedir, 'build.log' )
 
-if ( System.getProperty('java.verion', '8') == '8' )
+if ( System.getProperty('java.version', '8') == '8' )
 {
   // classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
   //   org.apache.maven.plugins.jdeps.its (classes)
