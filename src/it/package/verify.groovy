@@ -20,13 +20,20 @@
  
 def buildLog = new File( basedir, 'build.log' )
 
-if (System.getProperty('java.version').startsWith('1.8.')) {
+if (!System.getProperty('java.version').startsWith('1.8.')) {
+  // classes -> java.base
+  //   org.apache.maven.plugins.jdeps.its                 -> java.io                                            java.base
+  assert 1 == buildLog.readLines().dropWhile{ it != 'classes -> java.base' }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
+} else if (System.getProperty('os.name').startsWith('Windows')) {
   // classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
   //   org.apache.maven.plugins.jdeps.its (classes)
   //      -> java.io  
   assert 2 == buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
 } else {
+  // classes -> JDK removed internal API
   // classes -> java.base
-  //   org.apache.maven.plugins.jdeps.its                 -> java.io                                            java.base
-  assert 1 == buildLog.readLines().dropWhile{ it != 'classes -> java.base' }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
+  //    <unnamed>                                          -> java.io                                            java.base
+  //    <unnamed>                                          -> java.lang                                          java.base
+  //    <unnamed>                                          -> sun.misc                                           JDK internal API (JDK removed internal API)
+  assert 5 == buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
 }
