@@ -20,15 +20,12 @@
  
 def buildLog = new File( basedir, 'build.log' )
 
-if ( System.getProperty('java.version', '8') == '8' )
-{
+if (System.getProperty('java.version').startsWith('1.8.')) {
   // classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
   //   org.apache.maven.plugins.jdeps.its (classes)
   //      -> java.io  
   assert 2 == buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
-}
-else
-{
+} else {
   // classes -> java.base
   //   org.apache.maven.plugins.jdeps.its                 -> java.io                                            java.base
   assert 1 == buildLog.readLines().dropWhile{ it != 'classes -> java.base' }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
