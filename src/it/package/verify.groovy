@@ -19,14 +19,13 @@
  */
  
 def buildLog = new File( basedir, 'build.log' )
-def env = System.getenv()
 
 if ( System.getProperty('java.verion', '8') == '8' )
 {
   // classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
   //   org.apache.maven.plugins.jdeps.its (classes)
   //      -> java.io  
-  assert 2 == buildLog.readLines().dropWhile{ !it.startsWith("classes -> ${env.JAVA_HOME}") }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
+  assert 2 == buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.drop(1).takeWhile{ !it.startsWith( '[INFO]' ) }.size()
 }
 else
 {
