@@ -19,23 +19,30 @@ package org.apache.maven.plugins.jdeps;
  * under the License.
  */
 
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.codehaus.plexus.util.cli.Commandline;
+
 import java.nio.file.Path;
 import java.util.Set;
 
-import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.cli.Commandline;
-
 /**
- * Abstract Mojo for verifying code with jdkinternals
- *  
+ * Check if main classes depend on internal JDK classes
+ * 
  * @author Robert Scholte
+ *
  */
-public abstract class AbstractJDKInternalsMojo extends AbstractJDepsMojo
+@Mojo( name = "jdkinternals", 
+       requiresDependencyResolution = ResolutionScope.COMPILE,
+       defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true )
+public class JDepsInternalsMojo
+    extends AbstractJDepsMojo
 {
-
     @Override
     protected void addJDepsOptions( Commandline cmd, Set<Path> dependenciesToAnalyze )
-        throws MojoFailureException
+            throws MojoFailureException
     {
         super.addJDepsOptions( cmd, dependenciesToAnalyze );
         cmd.createArg().setValue( "-jdkinternals" );

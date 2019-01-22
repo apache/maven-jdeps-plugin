@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-def LS = System.getProperty("line.separator")
- 
-def buildLog = new File( basedir, 'build.log' )
+
+def buildLog = new File(basedir,'build.log')
 
 def depsLines = buildLog.readLines()
-		.dropWhile{ it.trim() != 'Base64Codec (classes)' }  // start line, inclusive
-		.take(2)					                 // end line, inclusive
-		.each{ it -> it.trim() }                     // remove indentation
-		.grep()  as Set                              // remove empty lines
+        .dropWhile{ it != 'com.google.common automatic' }  // start line, inclusive
+        .takeWhile{ !it.startsWith('[INFO] ---') }                  // end line, inclusive
+        .each{ it -> it.trim() }                                    // remove indentation
+        .grep()  as Set                                             // remove empty lines
 
-println(depsLines)
-
-assert depsLines
-		.find{ it.trim() == '-> sun.misc.BASE64Decoder                             JDK internal API (rt.jar)' }
-		.size() > 0
+boolean containsOffendingLibrary = false
+depsLines.each { it ->
+    containsOffendingLibrary |= it.contains( "com/google/guava/guava/25.1-jre/guava-25.1-jre.jar" )
+}
+assert containsOffendingLibrary
+assert depsLines.contains( "com.google.common -> jdk.unsupported" )
+assert depsLines.contains( "sun.misc.Unsafe                          See http://openjdk.java.net/jeps/260" )

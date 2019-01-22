@@ -22,11 +22,10 @@ def buildLog = new File( basedir, 'build.log' )
 
 def lines = buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.takeWhile{ !it.startsWith( '[INFO]' ) }
 
-  // classes -> java.base
-  //   org.apache.maven.plugins.jdeps.its                 -> java.io                                            java.base
+boolean containsJavaIO = false
+lines.each { it -> containsJavaIO |= it.contains( "java.io" ) }
+assert containsJavaIO
 
-  // classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
-  //   org.apache.maven.plugins.jdeps.its (classes)
-  //      -> java.io  
-
-assert lines.size() == ( lines[0] == 'classes -> java.base' ? 2 : 3  )
+boolean containsJavaLang = false
+lines.each { it -> containsJavaLang |= it.contains( "java.lang" ) }
+assert containsJavaLang

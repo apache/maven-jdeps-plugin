@@ -198,7 +198,9 @@ public abstract class AbstractJDepsMojo
     
     @Component
     private ToolchainManager toolchainManager;
-    
+
+    private static final String MODULE_INFO_FILE = "module-info.class";
+
     protected MavenProject getProject()
     {
         return project;
@@ -288,7 +290,17 @@ public abstract class AbstractJDepsMojo
         try
         {
             Collection<Path> cp = new ArrayList<>();
-            
+            boolean isModule = false;
+
+            for ( Path path : dependenciesToAnalyze )
+            {
+                if ( path.getFileName().toString().equals( MODULE_INFO_FILE ) )
+                {
+                    isModule = true;
+                    break;
+                }
+            }
+
             for ( Path path : getClassPath() )
             {
                 if ( !dependenciesToAnalyze.contains( path ) )
@@ -296,11 +308,17 @@ public abstract class AbstractJDepsMojo
                     cp.add( path );
                 }
             }
-            
+
             if ( !cp.isEmpty() )
             {
-                cmd.createArg().setValue( "-cp" );
-
+                if ( isModule )
+                {
+                    cmd.createArg().setValue( "--module-path" );
+                }
+                else
+                {
+                    cmd.createArg().setValue( "-cp" );
+                }
                 cmd.createArg().setValue( StringUtils.join( cp.iterator(), File.pathSeparator ) );
             }
             
@@ -373,9 +391,8 @@ public abstract class AbstractJDepsMojo
     protected Set<Path> getDependenciesToAnalyze()
     {
         Set<Path> jdepsClasses = new LinkedHashSet<>();
-        
-        jdepsClasses.add( Paths.get( getClassesDirectory() ) );
-        
+        jdepsClasses.add( getClassPathElement( getClassesDirectory() ) );
+
         if ( dependenciesToAnalyzeIncludes != null )
         {
             MatchPatterns includes = MatchPatterns.from( dependenciesToAnalyzeIncludes );
@@ -404,7 +421,19 @@ public abstract class AbstractJDepsMojo
         
         return jdepsClasses;
     }
-    
+
+    protected Path getClassPathElement( String classesDirectory )
+    {
+        if ( Paths.get( classesDirectory, MODULE_INFO_FILE ).toFile().isFile() && module == null )
+        {
+            return Paths.get( classesDirectory, MODULE_INFO_FILE );
+        }
+        else
+        {
+            return Paths.get( classesDirectory );
+        }
+    }
+
     protected void addJDepsClasses( Commandline cmd, Set<Path> dependenciesToAnalyze )
     {
         // <classes> can be a pathname to a .class file, a directory, a JAR file, or a fully-qualified class name.
@@ -624,8 +653,22 @@ public abstract class AbstractJDepsMojo
     {
         return failOnWarning;
     }
-    
-    protected abstract String getClassesDirectory();
-    
-    protected abstract Collection<Path> getClassPath() throws DependencyResolutionRequiredException;
+
+    protected String getClassesDirectory()
+    {
+        return getProject().getBuild().getOutputDirectory();
+    }
+
+    protected Collection<Path> getClassPath()
+        throws DependencyResolutionRequiredException
+    {
+        Set<Path> classPath = new LinkedHashSet<>( getProject().getCompileClasspathElements().size() );
+
+        for ( String elm : getProject().getCompileClasspathElements() )
+        {
+            classPath.add( getClassPathElement( elm ) );
+        }
+
+        return classPath;
+    }
 }

@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,19 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-def LS = System.getProperty("line.separator")
- 
-def buildLog = new File( basedir, 'build.log' )
 
-def depsLines = buildLog.readLines()
-		.dropWhile{ it.trim() != 'Base64Codec (classes)' }  // start line, inclusive
-		.take(2)					                 // end line, inclusive
-		.each{ it -> it.trim() }                     // remove indentation
-		.grep()  as Set                              // remove empty lines
+package org.apache.maven.plugins.jdeps.mjdeps16;
 
-println(depsLines)
+import com.google.common.collect.ImmutableSet;
 
-assert depsLines
-		.find{ it.trim() == '-> sun.misc.BASE64Decoder                             JDK internal API (rt.jar)' }
-		.size() > 0
+import java.util.Arrays;
+
+public class Main
+{
+    public static void main( String... args )
+    {
+        ImmutableSet<String> set1 = ImmutableSet
+                .<String>builder()
+                .addAll(Arrays.asList("Test1", "Test2", "Test3"))
+                .build();
+        set1.forEach(System.out::println);
+    }
+}

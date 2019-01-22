@@ -20,46 +20,28 @@ package org.apache.maven.plugins.jdeps;
  */
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Check if main classes depend on internal JDK classes
- * 
+ * JDeps Mojo for verifying code
+ *  
  * @author Robert Scholte
- *
  */
-@Mojo( name = "jdkinternals", 
-       requiresDependencyResolution = ResolutionScope.COMPILE,
-       defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true )
-public class JDKInternalsMojo
-    extends AbstractJDepsMojo
+@Mojo( name = "jdeps",
+        requiresDependencyResolution = ResolutionScope.COMPILE,
+        defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true )
+public class JDepsMojo extends AbstractJDepsMojo
 {
 
     @Override
-    protected String getClassesDirectory()
+    protected void addJDepsOptions( Commandline cmd, Set<Path> dependenciesToAnalyze )
+        throws MojoFailureException
     {
-        return getProject().getBuild().getOutputDirectory();
-    }
-    
-    @Override
-    protected Collection<Path> getClassPath()
-        throws DependencyResolutionRequiredException
-    {
-        Set<Path> classPath = new LinkedHashSet<>( getProject().getCompileClasspathElements().size() );
-
-        for ( String elm : getProject().getCompileClasspathElements() )
-        {
-            classPath.add( Paths.get( elm ) );
-        }
-
-        return classPath;
     }
 }

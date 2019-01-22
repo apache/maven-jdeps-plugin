@@ -20,7 +20,6 @@ package org.apache.maven.plugins.jdeps;
  */
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -69,7 +68,7 @@ public class TestJDKInternalsMojo
 
         for ( String elm : getProject().getTestClasspathElements() )
         {
-            classPath.add( Paths.get( elm ) );
+            classPath.add( getClassPathElement( elm ) );
         }
 
         return classPath;
