@@ -43,5 +43,6 @@ public class JDepsMojo extends AbstractJDepsMojo
     protected void addJDepsOptions( Commandline cmd, Set<Path> dependenciesToAnalyze )
         throws MojoFailureException
     {
+        super.addJDepsOptions( cmd, dependenciesToAnalyze );
     }
 }

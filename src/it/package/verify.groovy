@@ -25,7 +25,3 @@ def lines = buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.take
 boolean containsJavaIO = false
 lines.each { it -> containsJavaIO |= it.contains( "java.io" ) }
 assert containsJavaIO
-
-boolean containsJavaLang = false
-lines.each { it -> containsJavaLang |= it.contains( "java.lang" ) }
-assert containsJavaLang

@@ -49,7 +49,7 @@ under the License.
                 <executions>
                     <execution>
                         <goals>
-                            <goal>jdkinternals</goal>
+                            <goal>jdeps</goal>
                         </goals>
                     </execution>
                 </executions>

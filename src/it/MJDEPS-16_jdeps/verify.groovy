@@ -17,3 +17,17 @@
  * under the License.
  */
 
+def buildLog = new File(basedir,'build.log')
+
+def lines = buildLog.readLines()
+        .dropWhile{ it != 'animal.sniffer.annotations automatic' }  // start line, inclusive
+        .takeWhile{ !it.startsWith('[INFO] ---') }                  // end line, inclusive
+        .each{ it -> it.trim() }                                    // remove indentation
+        .grep()  as Set                                             // remove empty lines
+
+assert lines.contains( "animal.sniffer.annotations automatic" )
+assert lines.contains( "animal.sniffer.annotations -> java.base" )
+assert lines.contains( "aopalliance automatic" )
+assert lines.contains( "aopalliance -> java.base" )
+assert lines.contains( "checker.qual automatic" )
+assert lines.contains( "com.google.guice -> javax.inject" )
