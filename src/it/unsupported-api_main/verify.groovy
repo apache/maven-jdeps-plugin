@@ -20,4 +20,4 @@
  
 def buildLog = new File( basedir, 'build.log' )
 
-assert buildLog.readLines().dropWhile{ !(it =~ /Found offending packages\:$/) }.getAt(1) =~ /^\[ERROR\]  sun\.misc -> JDK internal API \(.+\)$/
+assert buildLog.readLines().dropWhile{ !(it =~ /Found offending packages\:$/) }.getAt(1) ==~ /\[ERROR\]\s+sun\.misc -> JDK internal API \(.+\)/
