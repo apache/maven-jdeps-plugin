@@ -85,7 +85,7 @@ public abstract class AbstractJDepsMojo
      * 
      * @since 3.1.1
      */
-    @Parameter
+    @Parameter( property = "jdeps.multiRelease" )
     private String multiRelease;
     
     /**
