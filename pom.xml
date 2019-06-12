@@ -30,7 +30,7 @@ under the License.
   </parent>
 
   <artifactId>maven-jdeps-plugin</artifactId>
-  <version>3.1.2</version>
+  <version>3.1.3-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven JDeps Plugin</name>
@@ -45,7 +45,7 @@ under the License.
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-jdeps-plugin.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-jdeps-plugin.git</developerConnection>
     <url>https://github.com/apache/maven-jdeps-plugin/tree/${project.scm.tag}</url>
-    <tag>maven-jdeps-plugin-3.1.2</tag>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>JIRA</system>
