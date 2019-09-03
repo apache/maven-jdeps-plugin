@@ -18,9 +18,6 @@
  * under the License.
  */
  
-def LS = System.getProperty("line.separator")
- 
 def buildLog = new File( basedir, 'build.log' )
-assert buildLog.text.contains( "Found offending packages:${LS} sun.misc -> JDK internal API (java.base)" ) || 
-	buildLog.text.contains( "Found offending packages:${LS} sun.misc -> JDK internal API (rt.jar)" ) ||
-	buildLog.text.contains( "Found offending packages:${LS} sun.misc -> JDK internal API (JDK removed internal API)" )
+
+assert buildLog.readLines().dropWhile{ !(it =~ /Found offending packages\:$/) }.getAt(1) ==~ /\[ERROR\]\s+sun\.misc -> JDK internal API \(.+\)/
