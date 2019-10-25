@@ -1,4 +1,5 @@
-/**
+
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,5 +17,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ 
+def buildLog = new File( basedir, 'build.log' )
 
-asfMavenTlpPlgnBuild(jdk:['8','11','13','14'])
+def found = false;
+
+buildLog.readLines().each { String line ->
+
+  if ( line.contains( 'Found offending packages' ) )
+  {
+    found = true;
+  }
+}
+
+assert found : "No offending packages"

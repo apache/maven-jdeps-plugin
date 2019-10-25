@@ -79,15 +79,23 @@ public abstract class AbstractJDepsMojo
      */
     @Parameter( defaultValue = "true", property = "jdeps.failOnWarning" )
     private boolean failOnWarning;
-    
+
     /**
      * Specifies the version when processing multi-release JAR files version should be an integer >=9 or base.
-     * 
+     *
      * @since 3.1.1
      */
     @Parameter( property = "jdeps.multiRelease" )
     private String multiRelease;
-    
+
+    /**
+     * Whether only the sources need to be compatible or also every dependency on the classpath.
+     *
+     * @since 3.1.3
+     */
+    @Parameter( defaultValue = "true", property = "jdeps.includeClasspath" )
+    private boolean includeClasspath;
+
     /**
      * Additional dependencies which should be analyzed besides the classes.
      * Specify as {@code groupId:artifactId}, allowing ant-pattern.
@@ -227,8 +235,16 @@ public abstract class AbstractJDepsMojo
 //      jdeps [options] classes ...
         Commandline cmd = new Commandline();
         cmd.setExecutable( jExecutable );
-        
-        Set<Path> dependenciesToAnalyze = getDependenciesToAnalyze();
+
+        Set<Path> dependenciesToAnalyze = null;
+        try
+        {
+            dependenciesToAnalyze = getDependenciesToAnalyze( includeClasspath );
+        }
+        catch ( DependencyResolutionRequiredException e )
+        {
+            throw new MojoExecutionException( e.getMessage(), e );
+        }
         addJDepsOptions( cmd, dependenciesToAnalyze );
         addJDepsClasses( cmd, dependenciesToAnalyze );
         
@@ -370,12 +386,18 @@ public abstract class AbstractJDepsMojo
         // cmd.createArg().setValue( "-version" );
     }
     
-    protected Set<Path> getDependenciesToAnalyze()
+    protected Set<Path> getDependenciesToAnalyze( boolean includeClasspath )
+            throws DependencyResolutionRequiredException
     {
         Set<Path> jdepsClasses = new LinkedHashSet<>();
         
         jdepsClasses.add( Paths.get( getClassesDirectory() ) );
-        
+
+        if ( includeClasspath )
+        {
+            jdepsClasses.addAll( getClassPath() );
+        }
+
         if ( dependenciesToAnalyzeIncludes != null )
         {
             MatchPatterns includes = MatchPatterns.from( dependenciesToAnalyzeIncludes );
