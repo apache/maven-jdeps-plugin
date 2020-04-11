@@ -84,7 +84,7 @@ Additional Resources
 --------------------
 
 + [Contributing patches](https://maven.apache.org/guides/development/guide-maven-development.html#Creating_and_submitting_a_patch)
-+ [Apache Maven Help JIRA project page][jira]
++ [Apache Maven JDeps Plugin JIRA project page][jira]
 + [Contributor License Agreement][cla]
 + [General GitHub documentation](https://help.github.com/)
 + [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
