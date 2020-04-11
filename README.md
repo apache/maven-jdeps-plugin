@@ -20,6 +20,7 @@ under the License.
 Contributing to [Apache Maven JDeps Plugin](https://maven.apache.org/plugins/maven-jdeps-plugin/)
 ======================
 
+[![ASF Jira](https://img.shields.io/endpoint?url=https%3A%2F%2Fmaven.apache.org%2Fbadges%2Fasf_jira-MJDEPS.json)][jira]
 [![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)][license]
 [![Jenkins Status](https://img.shields.io/jenkins/s/https/builds.apache.org/job/maven-box/job/maven-jdeps-plugin/job/master.svg?style=flat-square)][build]
 [![Jenkins tests](https://img.shields.io/jenkins/t/https/builds.apache.org/job/maven-box/job/maven-jdeps-plugin/job/master.svg?style=flat-square)][test-results]
@@ -83,13 +84,14 @@ Additional Resources
 --------------------
 
 + [Contributing patches](https://maven.apache.org/guides/development/guide-maven-development.html#Creating_and_submitting_a_patch)
-+ [Apache Maven Help JIRA project page](https://issues.apache.org/jira/projects/MSHARED/)
++ [Apache Maven Help JIRA project page][jira]
 + [Contributor License Agreement][cla]
 + [General GitHub documentation](https://help.github.com/)
 + [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
 + [Apache Maven Twitter Account](https://twitter.com/ASFMavenProject)
 + #Maven IRC channel on freenode.org
 
+[jira]: https://issues.apache.org/jira/projects/MJDEPS/
 [license]: https://www.apache.org/licenses/LICENSE-2.0
 [ml-list]: http://maven.apache.org/mailing-lists.html
 [code-style]: https://maven.apache.org/developers/conventions/code.html
