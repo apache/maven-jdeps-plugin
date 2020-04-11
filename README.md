@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Contributing to Apache Maven JDeps Plugin
+Contributing to [Apache Maven JDeps Plugin](https://maven.apache.org/plugins/maven-jdeps-plugin/)
 ======================
 
 [![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)][license]
@@ -37,7 +37,7 @@ Getting Started
 + Make sure you have a [JIRA account](https://issues.apache.org/jira/).
 + Make sure you have a [GitHub account](https://github.com/signup/free).
 + If you're planning to implement a new feature, it makes sense to discuss your changes 
-  on the [dev list](https://maven.apache.org/mail-lists.html) first. 
+  on the [dev list][ml-list] first. 
   This way you can make sure you're not wasting your time on something that isn't 
   considered to be in Apache Maven's scope.
 + Submit a ticket for your issue or enhancement, assuming one does not already exist.
@@ -48,7 +48,7 @@ Getting Started
 Making and Submitting Changes
 --------------
 
-We accept Pull Requests via GitHub. The [developer mailing list][dev-ml-list] is the
+We accept Pull Requests via GitHub. The [developer mailing list][ml-list] is the
 main channel of communication for contributors.  
 There are some guidelines which will make applying PRs easier for us:
 + Create a branch from where you want to base your work (this is usually the master branch).
@@ -91,7 +91,7 @@ Additional Resources
 + #Maven IRC channel on freenode.org
 
 [license]: https://www.apache.org/licenses/LICENSE-2.0
-[dev-ml-list]: http://maven.apache.org/mailing-lists.html
+[ml-list]: http://maven.apache.org/mailing-lists.html
 [code-style]: https://maven.apache.org/developers/conventions/code.html
 [cla]: https://www.apache.org/licenses/#clas
 [maven-wiki]: https://cwiki.apache.org/confluence/display/MAVEN/Index
