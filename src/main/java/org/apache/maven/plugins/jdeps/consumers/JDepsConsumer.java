@@ -43,7 +43,8 @@ public class JDepsConsumer
      * JDK8 Linux:   JDK internal API (JDK removed internal API)
      * JDK9:         JDK internal API (java.base)
      */
-    private static final Pattern JDKINTERNALAPI = Pattern.compile( ".+->\\s([a-z\\.]+)\\s+(JDK internal API .+)" );
+    private static final Pattern JDKINTERNALAPI =
+        Pattern.compile( ".+->\\s([a-z\\.]+)\\s+(JDK (?:removed )?internal API.*)" );
 
     /**
      * <dl>
