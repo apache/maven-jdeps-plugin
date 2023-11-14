@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.maven.plugins.jdeps;
 
 /*
@@ -44,9 +62,9 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.jdeps.consumers.JDepsConsumer;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.jdeps.consumers.JDepsConsumer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.toolchain.Toolchain;
 import org.apache.maven.toolchain.ToolchainManager;
@@ -57,27 +75,25 @@ import org.codehaus.plexus.util.cli.Commandline;
 
 /**
  * Abstract Mojo for JDeps
- * 
+ *
  * @author Robert Scholte
  *
  */
-public abstract class AbstractJDepsMojo
-    extends AbstractMojo
-{
+public abstract class AbstractJDepsMojo extends AbstractMojo {
 
-    @Parameter( defaultValue = "${project}", readonly = true, required = true )
+    @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
-    @Parameter( defaultValue = "${session}", readonly = true, required = true )
+    @Parameter(defaultValue = "${session}", readonly = true, required = true)
     private MavenSession session;
 
-    @Parameter( defaultValue = "${project.build.directory}", readonly = true, required = true )
+    @Parameter(defaultValue = "${project.build.directory}", readonly = true, required = true)
     private File outputDirectory;
 
     /**
      * Indicates whether the build will continue even if there are jdeps warnings.
      */
-    @Parameter( defaultValue = "true", property = "jdeps.failOnWarning" )
+    @Parameter(defaultValue = "true", property = "jdeps.failOnWarning")
     private boolean failOnWarning;
 
     /**
@@ -85,7 +101,7 @@ public abstract class AbstractJDepsMojo
      *
      * @since 3.1.1
      */
-    @Parameter( property = "jdeps.multiRelease" )
+    @Parameter(property = "jdeps.multiRelease")
     private String multiRelease;
 
     /**
@@ -93,13 +109,13 @@ public abstract class AbstractJDepsMojo
      *
      * @since 3.1.3
      */
-    @Parameter( defaultValue = "true", property = "jdeps.includeClasspath" )
+    @Parameter(defaultValue = "true", property = "jdeps.includeClasspath")
     private boolean includeClasspath;
 
     /**
      * Additional dependencies which should be analyzed besides the classes.
      * Specify as {@code groupId:artifactId}, allowing ant-pattern.
-     * 
+     *
      * E.g.
      * <pre>
      *   &lt;dependenciesToAnalyzeIncludes&gt;
@@ -107,7 +123,7 @@ public abstract class AbstractJDepsMojo
      *     &lt;include&gt;org.foo.*:*&lt;/include&gt;
      *     &lt;include&gt;com.foo.bar:*&lt;/include&gt;
      *     &lt;include&gt;dot.foo.bar:utilities&lt;/include&gt;
-     *   &lt;/dependenciesToAnalyzeIncludes&gt;  
+     *   &lt;/dependenciesToAnalyzeIncludes&gt;
      * </pre>
      */
     @Parameter
@@ -116,14 +132,14 @@ public abstract class AbstractJDepsMojo
     /**
      * Subset of {@link AbstractJDepsMojo#dependenciesToAnalyzeIncludes} which should be not analyzed.
      * Specify as {@code groupId:artifactId}, allowing ant-pattern.
-     * 
+     *
      * E.g.
      * <pre>
      *   &lt;dependenciesToAnalyzeExcludes&gt;
      *     &lt;exclude&gt;org.foo.*:*&lt;/exclude&gt;
      *     &lt;exclude&gt;com.foo.bar:*&lt;/exclude&gt;
      *     &lt;exclude&gt;dot.foo.bar:utilities&lt;/exclude&gt;
-     *   &lt;/dependenciesToAnalyzeExcludes&gt;  
+     *   &lt;/dependenciesToAnalyzeExcludes&gt;
      * </pre>
      */
     @Parameter
@@ -132,11 +148,11 @@ public abstract class AbstractJDepsMojo
     /**
      * Destination directory for DOT file output
      */
-    @Parameter( property = "jdeps.dotOutput" )
+    @Parameter(property = "jdeps.dotOutput")
     private File dotOutput;
-    
-//    @Parameter( defaultValue = "false", property = "jdeps.summaryOnly" )
-//    private boolean summaryOnly;
+
+    //    @Parameter( defaultValue = "false", property = "jdeps.summaryOnly" )
+    //    private boolean summaryOnly;
 
     /**
      * <dl>
@@ -145,495 +161,411 @@ public abstract class AbstractJDepsMojo
      *   <dt>&lt;empty&gt;</dt><dd>Print all class level dependencies. Equivalent to -verbose:class -filter:none.<dd/>
      * </dl>
      */
-    @Parameter( property = "jdeps.verbose" )
+    @Parameter(property = "jdeps.verbose")
     private String verbose;
 
-    
     /**
      * Finds dependences matching the specified package name.
-     * 
+     *
      * @since 3.1.1.
      */
     @Parameter
     private List<String> packages;
 
-//    /**
-//     * A comma-separated list to find dependences in the given package (may be given multiple times)
-//     */
-//    @Parameter( property = "jdeps.pkgnames" )
-//    private String packageNames;
-//    
-//    /**
-//     * Finds dependences in packages matching pattern (-p and -e are exclusive)
-//     */
-//    @Parameter( property = "jdeps.regex" )
-//    private String regex;
-    
+    //    /**
+    //     * A comma-separated list to find dependences in the given package (may be given multiple times)
+    //     */
+    //    @Parameter( property = "jdeps.pkgnames" )
+    //    private String packageNames;
+    //
+    //    /**
+    //     * Finds dependences in packages matching pattern (-p and -e are exclusive)
+    //     */
+    //    @Parameter( property = "jdeps.regex" )
+    //    private String regex;
+
     /**
      * Restrict analysis to classes matching pattern. This option filters the list of classes to be analyzed. It can be
      * used together with <code>-p</code> and <code>-e</code> which apply pattern to the dependences
      */
-    @Parameter( property = "jdeps.include" )
+    @Parameter(property = "jdeps.include")
     private String include;
-    
+
     /**
      * Restrict analysis to APIs i.e. dependences from the signature of public and protected members of public classes
      * including field type, method parameter types, returned type, checked exception types etc
      */
-    @Parameter( defaultValue = "false", property = "jdeps.apionly" )
+    @Parameter(defaultValue = "false", property = "jdeps.apionly")
     private boolean apiOnly;
-    
+
     /**
      * Show profile or the file containing a package
      */
-    @Parameter( defaultValue = "false", property = "jdeps.profile" )
+    @Parameter(defaultValue = "false", property = "jdeps.profile")
     private boolean profile;
-    
+
     /**
      * Recursively traverse all dependencies. The {@code -R} option implies {@code -filter:none}.  If {@code -p},
      * {@code -e}, {@code -f} option is specified, only the matching dependences are analyzed.
      */
-    @Parameter( defaultValue = "false", property = "jdeps.recursive" )
+    @Parameter(defaultValue = "false", property = "jdeps.recursive")
     private boolean recursive;
 
     /**
      * Specifies the root module for analysis.
-     * 
+     *
      * @since JDK 1.9.0
      */
-    @Parameter( property = "jdeps.module" )
+    @Parameter(property = "jdeps.module")
     private String module;
-    
+
     @Component
     private ToolchainManager toolchainManager;
-    
-    protected MavenProject getProject()
-    {
+
+    protected MavenProject getProject() {
         return project;
     }
 
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-        if ( !new File( getClassesDirectory() ).exists() )
-        {
-            getLog().debug( "No classes to analyze" );
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (!new File(getClassesDirectory()).exists()) {
+            getLog().debug("No classes to analyze");
             return;
         }
 
         String jExecutable;
-        try
-        {
+        try {
             jExecutable = getJDepsExecutable();
-        }
-        catch ( IOException e )
-        {
-            throw new MojoFailureException( "Unable to find jdeps command: " + e.getMessage(), e );
+        } catch (IOException e) {
+            throw new MojoFailureException("Unable to find jdeps command: " + e.getMessage(), e);
         }
 
-//      Synopsis
-//      jdeps [options] classes ...
+        //      Synopsis
+        //      jdeps [options] classes ...
         Commandline cmd = new Commandline();
-        cmd.setExecutable( jExecutable );
+        cmd.setExecutable(jExecutable);
 
         Set<Path> dependenciesToAnalyze = null;
-        try
-        {
-            dependenciesToAnalyze = getDependenciesToAnalyze( includeClasspath );
+        try {
+            dependenciesToAnalyze = getDependenciesToAnalyze(includeClasspath);
+        } catch (DependencyResolutionRequiredException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
-        catch ( DependencyResolutionRequiredException e )
-        {
-            throw new MojoExecutionException( e.getMessage(), e );
-        }
-        addJDepsOptions( cmd, dependenciesToAnalyze );
-        addJDepsClasses( cmd, dependenciesToAnalyze );
-        
+        addJDepsOptions(cmd, dependenciesToAnalyze);
+        addJDepsClasses(cmd, dependenciesToAnalyze);
+
         JDepsConsumer consumer = new JDepsConsumer();
-        executeJDepsCommandLine( cmd, outputDirectory, consumer );
-        
+        executeJDepsCommandLine(cmd, outputDirectory, consumer);
+
         // @ TODO if there will be more goals, this should be pushed down to AbstractJDKInternals
-        if ( consumer.getOffendingPackages().size() > 0 )
-        {
-            final String ls = System.getProperty( "line.separator" );
-            
+        if (consumer.getOffendingPackages().size() > 0) {
+            final String ls = System.getProperty("line.separator");
+
             StringBuilder msg = new StringBuilder();
-            msg.append( "Found offending packages:" ).append( ls );
-            for ( Map.Entry<String, String> offendingPackage : consumer.getOffendingPackages().entrySet() )
-            {
-                msg.append( ' ' ).append( offendingPackage.getKey() )
-                   .append( " -> " ).append( offendingPackage.getValue() ).append( ls );
+            msg.append("Found offending packages:").append(ls);
+            for (Map.Entry<String, String> offendingPackage :
+                    consumer.getOffendingPackages().entrySet()) {
+                msg.append(' ')
+                        .append(offendingPackage.getKey())
+                        .append(" -> ")
+                        .append(offendingPackage.getValue())
+                        .append(ls);
             }
-            
-            if ( isFailOnWarning() )
-            {
-                throw new MojoExecutionException( msg.toString() );
+
+            if (isFailOnWarning()) {
+                throw new MojoExecutionException(msg.toString());
             }
         }
     }
 
-    protected void addJDepsOptions( Commandline cmd, Set<Path> dependenciesToAnalyze )
-        throws MojoFailureException
-    {
-        if ( dotOutput != null )
-        {
-            cmd.createArg().setValue( "-dotoutput" );
-            cmd.createArg().setFile( dotOutput );
+    protected void addJDepsOptions(Commandline cmd, Set<Path> dependenciesToAnalyze) throws MojoFailureException {
+        if (dotOutput != null) {
+            cmd.createArg().setValue("-dotoutput");
+            cmd.createArg().setFile(dotOutput);
         }
-        
-//        if ( summaryOnly )
-//        {
-//            cmd.createArg().setValue( "-s" );
-//        }
-        
-        if ( verbose != null )
-        {
-            if ( "class".equals( verbose ) )
-            {
-                cmd.createArg().setValue( "-verbose:class" );
-            }
-            else if ( "package".equals( verbose ) )
-            {
-                cmd.createArg().setValue( "-verbose:package" );
-            }
-            else
-            {
-                cmd.createArg().setValue( "-v" );
+
+        //        if ( summaryOnly )
+        //        {
+        //            cmd.createArg().setValue( "-s" );
+        //        }
+
+        if (verbose != null) {
+            if ("class".equals(verbose)) {
+                cmd.createArg().setValue("-verbose:class");
+            } else if ("package".equals(verbose)) {
+                cmd.createArg().setValue("-verbose:package");
+            } else {
+                cmd.createArg().setValue("-v");
             }
         }
-        
-        try
-        {
+
+        try {
             Collection<Path> cp = new ArrayList<>();
-            
-            for ( Path path : getClassPath() )
-            {
-                if ( !dependenciesToAnalyze.contains( path ) )
-                {
-                    cp.add( path );
+
+            for (Path path : getClassPath()) {
+                if (!dependenciesToAnalyze.contains(path)) {
+                    cp.add(path);
                 }
             }
-            
-            if ( !cp.isEmpty() )
-            {
-                cmd.createArg().setValue( "-cp" );
 
-                cmd.createArg().setValue( StringUtils.join( cp.iterator(), File.pathSeparator ) );
+            if (!cp.isEmpty()) {
+                cmd.createArg().setValue("-cp");
+
+                cmd.createArg().setValue(StringUtils.join(cp.iterator(), File.pathSeparator));
             }
-            
+
+        } catch (DependencyResolutionRequiredException e) {
+            throw new MojoFailureException(e.getMessage(), e);
         }
-        catch ( DependencyResolutionRequiredException e )
-        {
-            throw new MojoFailureException( e.getMessage(), e );
-        }
-        
-        if ( packages != null )
-        {
-            for ( String pkgName : packages )
-            {
-                cmd.createArg().setValue( "-p" );
-                cmd.createArg().setValue( pkgName );
+
+        if (packages != null) {
+            for (String pkgName : packages) {
+                cmd.createArg().setValue("-p");
+                cmd.createArg().setValue(pkgName);
             }
         }
-        
-//        if ( packageNames != null )
-//        {
-//            for ( String pkgName : packageNames.split( "[,:;]" ) )
-//            {
-//                cmd.createArg().setValue( "-p" );
-//                cmd.createArg().setValue( pkgName );
-//            }
-//        }
-//        
-//        if ( regex != null )
-//        {
-//            cmd.createArg().setValue( "-e" );
-//            cmd.createArg().setValue( regex );
-//        }
 
-        if ( include != null )
-        {
-            cmd.createArg().setValue( "-include" );
-            cmd.createArg().setValue( include );
-        }
+        //        if ( packageNames != null )
+        //        {
+        //            for ( String pkgName : packageNames.split( "[,:;]" ) )
+        //            {
+        //                cmd.createArg().setValue( "-p" );
+        //                cmd.createArg().setValue( pkgName );
+        //            }
+        //        }
+        //
+        //        if ( regex != null )
+        //        {
+        //            cmd.createArg().setValue( "-e" );
+        //            cmd.createArg().setValue( regex );
+        //        }
 
-        if ( profile )
-        {
-            cmd.createArg().setValue( "-P" );
-        }
-        
-        if ( module != null )
-        {
-            cmd.createArg().setValue( "-m" );
-            cmd.createArg().setValue( module );
+        if (include != null) {
+            cmd.createArg().setValue("-include");
+            cmd.createArg().setValue(include);
         }
 
-        if ( multiRelease != null )
-        {
-            cmd.createArg().setValue( "--multi-release" );
-            cmd.createArg().setValue( multiRelease );
+        if (profile) {
+            cmd.createArg().setValue("-P");
         }
 
-        if ( apiOnly )
-        {
-            cmd.createArg().setValue( "-apionly" );
+        if (module != null) {
+            cmd.createArg().setValue("-m");
+            cmd.createArg().setValue(module);
         }
-        
-        if ( recursive )
-        {
-            cmd.createArg().setValue( "-R" );
+
+        if (multiRelease != null) {
+            cmd.createArg().setValue("--multi-release");
+            cmd.createArg().setValue(multiRelease);
         }
-        
+
+        if (apiOnly) {
+            cmd.createArg().setValue("-apionly");
+        }
+
+        if (recursive) {
+            cmd.createArg().setValue("-R");
+        }
+
         // cmd.createArg().setValue( "-version" );
     }
-    
-    protected Set<Path> getDependenciesToAnalyze( boolean includeClasspath )
-            throws DependencyResolutionRequiredException
-    {
-        Set<Path> jdepsClasses = new LinkedHashSet<>();
-        
-        jdepsClasses.add( Paths.get( getClassesDirectory() ) );
 
-        if ( includeClasspath )
-        {
-            jdepsClasses.addAll( getClassPath() );
+    protected Set<Path> getDependenciesToAnalyze(boolean includeClasspath)
+            throws DependencyResolutionRequiredException {
+        Set<Path> jdepsClasses = new LinkedHashSet<>();
+
+        jdepsClasses.add(Paths.get(getClassesDirectory()));
+
+        if (includeClasspath) {
+            jdepsClasses.addAll(getClassPath());
         }
 
-        if ( dependenciesToAnalyzeIncludes != null )
-        {
-            MatchPatterns includes = MatchPatterns.from( dependenciesToAnalyzeIncludes );
-            
+        if (dependenciesToAnalyzeIncludes != null) {
+            MatchPatterns includes = MatchPatterns.from(dependenciesToAnalyzeIncludes);
+
             MatchPatterns excludes;
-            if ( dependenciesToAnalyzeExcludes != null )
-            {
-                excludes = MatchPatterns.from( dependenciesToAnalyzeExcludes );
-            }
-            else
-            {
-                excludes = MatchPatterns.from( Collections.<String>emptyList() );
+            if (dependenciesToAnalyzeExcludes != null) {
+                excludes = MatchPatterns.from(dependenciesToAnalyzeExcludes);
+            } else {
+                excludes = MatchPatterns.from(Collections.<String>emptyList());
             }
 
-            for ( Artifact artifact : project.getArtifacts() )
-            {
-                String versionlessKey = ArtifactUtils.versionlessKey( artifact );
+            for (Artifact artifact : project.getArtifacts()) {
+                String versionlessKey = ArtifactUtils.versionlessKey(artifact);
 
-                if ( includes.matchesPatternStart( versionlessKey, true ) 
-                    && !excludes.matchesPatternStart( versionlessKey, true ) )
-                {
-                    jdepsClasses.add( artifact.getFile().toPath() );
+                if (includes.matchesPatternStart(versionlessKey, true)
+                        && !excludes.matchesPatternStart(versionlessKey, true)) {
+                    jdepsClasses.add(artifact.getFile().toPath());
                 }
             }
         }
-        
+
         return jdepsClasses;
     }
-    
-    protected void addJDepsClasses( Commandline cmd, Set<Path> dependenciesToAnalyze )
-    {
+
+    protected void addJDepsClasses(Commandline cmd, Set<Path> dependenciesToAnalyze) {
         // <classes> can be a pathname to a .class file, a directory, a JAR file, or a fully-qualified class name.
-        for ( Path dependencyToAnalyze : dependenciesToAnalyze )
-        {
-            cmd.createArg().setFile( dependencyToAnalyze.toFile() );
+        for (Path dependencyToAnalyze : dependenciesToAnalyze) {
+            cmd.createArg().setFile(dependencyToAnalyze.toFile());
         }
     }
 
-    private String getJDepsExecutable() throws IOException
-    {
+    private String getJDepsExecutable() throws IOException {
         Toolchain tc = getToolchain();
 
         String jdepsExecutable = null;
-        if ( tc != null )
-        {
-            jdepsExecutable = tc.findTool( "jdeps" );
+        if (tc != null) {
+            jdepsExecutable = tc.findTool("jdeps");
         }
 
-        String jdepsCommand = "jdeps" + ( SystemUtils.IS_OS_WINDOWS ? ".exe" : "" );
+        String jdepsCommand = "jdeps" + (SystemUtils.IS_OS_WINDOWS ? ".exe" : "");
 
         File jdepsExe;
 
-        if ( StringUtils.isNotEmpty( jdepsExecutable ) )
-        {
-            jdepsExe = new File( jdepsExecutable );
+        if (StringUtils.isNotEmpty(jdepsExecutable)) {
+            jdepsExe = new File(jdepsExecutable);
 
-            if ( jdepsExe.isDirectory() )
-            {
-                jdepsExe = new File( jdepsExe, jdepsCommand );
+            if (jdepsExe.isDirectory()) {
+                jdepsExe = new File(jdepsExe, jdepsCommand);
             }
 
-            if ( SystemUtils.IS_OS_WINDOWS && jdepsExe.getName().indexOf( '.' ) < 0 )
-            {
-                jdepsExe = new File( jdepsExe.getPath() + ".exe" );
+            if (SystemUtils.IS_OS_WINDOWS && jdepsExe.getName().indexOf('.') < 0) {
+                jdepsExe = new File(jdepsExe.getPath() + ".exe");
             }
 
-            if ( !jdepsExe.isFile() )
-            {
-                throw new IOException( "The jdeps executable '" + jdepsExe
-                    + "' doesn't exist or is not a file." );
+            if (!jdepsExe.isFile()) {
+                throw new IOException("The jdeps executable '" + jdepsExe + "' doesn't exist or is not a file.");
             }
             return jdepsExe.getAbsolutePath();
         }
 
-        jdepsExe = new File( SystemUtils.getJavaHome() + File.separator + ".." + File.separator + "sh", jdepsCommand );
+        jdepsExe = new File(SystemUtils.getJavaHome() + File.separator + ".." + File.separator + "sh", jdepsCommand);
 
         // ----------------------------------------------------------------------
         // Try to find jdepsExe from JAVA_HOME environment variable
         // ----------------------------------------------------------------------
-        if ( !jdepsExe.exists() || !jdepsExe.isFile() )
-        {
+        if (!jdepsExe.exists() || !jdepsExe.isFile()) {
             Properties env = CommandLineUtils.getSystemEnvVars();
-            String javaHome = env.getProperty( "JAVA_HOME" );
-            if ( StringUtils.isEmpty( javaHome ) )
-            {
-                throw new IOException( "The environment variable JAVA_HOME is not correctly set." );
+            String javaHome = env.getProperty("JAVA_HOME");
+            if (StringUtils.isEmpty(javaHome)) {
+                throw new IOException("The environment variable JAVA_HOME is not correctly set.");
             }
-            if ( ( !new File( javaHome ).getCanonicalFile().exists() )
-                || ( new File( javaHome ).getCanonicalFile().isFile() ) )
-            {
-                throw new IOException( "The environment variable JAVA_HOME=" + javaHome
-                    + " doesn't exist or is not a valid directory." );
+            if ((!new File(javaHome).getCanonicalFile().exists())
+                    || (new File(javaHome).getCanonicalFile().isFile())) {
+                throw new IOException("The environment variable JAVA_HOME=" + javaHome
+                        + " doesn't exist or is not a valid directory.");
             }
 
-            jdepsExe = new File( javaHome + File.separator + "bin", jdepsCommand );
+            jdepsExe = new File(javaHome + File.separator + "bin", jdepsCommand);
         }
 
-        if ( !jdepsExe.getCanonicalFile().exists() || !jdepsExe.getCanonicalFile().isFile() )
-        {
-            throw new IOException( "The jdeps executable '" + jdepsExe
-                + "' doesn't exist or is not a file. Verify the JAVA_HOME environment variable." );
+        if (!jdepsExe.getCanonicalFile().exists()
+                || !jdepsExe.getCanonicalFile().isFile()) {
+            throw new IOException("The jdeps executable '" + jdepsExe
+                    + "' doesn't exist or is not a file. Verify the JAVA_HOME environment variable.");
         }
 
         return jdepsExe.getAbsolutePath();
     }
-    
-    private void executeJDepsCommandLine( Commandline cmd, File jOutputDirectory,
-                                            CommandLineUtils.StringStreamConsumer consumer )
-        throws MojoExecutionException
-    {
-        if ( getLog().isDebugEnabled() )
-        {
+
+    private void executeJDepsCommandLine(
+            Commandline cmd, File jOutputDirectory, CommandLineUtils.StringStreamConsumer consumer)
+            throws MojoExecutionException {
+        if (getLog().isDebugEnabled()) {
             // no quoted arguments
-            getLog().debug( "Executing: " + CommandLineUtils.toString( cmd.getCommandline() ).replaceAll( "'", "" ) );
+            getLog().debug("Executing: "
+                    + CommandLineUtils.toString(cmd.getCommandline()).replaceAll("'", ""));
         }
 
-        
-        CommandLineUtils.StringStreamConsumer err = new CommandLineUtils.StringStreamConsumer()
-        {
+        CommandLineUtils.StringStreamConsumer err = new CommandLineUtils.StringStreamConsumer() {
             @Override
-            public void consumeLine( String line )
-            {
-                if ( !line.startsWith( "Picked up JAVA_TOOL_OPTIONS:" ) )
-                {
-                    super.consumeLine( line );
+            public void consumeLine(String line) {
+                if (!line.startsWith("Picked up JAVA_TOOL_OPTIONS:")) {
+                    super.consumeLine(line);
                 }
             }
         };
         CommandLineUtils.StringStreamConsumer out;
-        if ( consumer != null )
-        {
+        if (consumer != null) {
             out = consumer;
-        }
-        else
-        {
+        } else {
             out = new CommandLineUtils.StringStreamConsumer();
         }
-                        
-        try
-        {
-            int exitCode = CommandLineUtils.executeCommandLine( cmd, out, err );
 
-            String output = ( StringUtils.isEmpty( out.getOutput() ) ? null : '\n' + out.getOutput().trim() );
+        try {
+            int exitCode = CommandLineUtils.executeCommandLine(cmd, out, err);
 
-            if ( exitCode != 0 )
-            {
-                if ( StringUtils.isNotEmpty( output ) )
-                {
-                    getLog().info( output );
+            String output = (StringUtils.isEmpty(out.getOutput())
+                    ? null
+                    : '\n' + out.getOutput().trim());
+
+            if (exitCode != 0) {
+                if (StringUtils.isNotEmpty(output)) {
+                    getLog().info(output);
                 }
 
-                StringBuilder msg = new StringBuilder( "\nExit code: " );
-                msg.append( exitCode );
-                if ( StringUtils.isNotEmpty( err.getOutput() ) )
-                {
-                    msg.append( " - " ).append( err.getOutput() );
+                StringBuilder msg = new StringBuilder("\nExit code: ");
+                msg.append(exitCode);
+                if (StringUtils.isNotEmpty(err.getOutput())) {
+                    msg.append(" - ").append(err.getOutput());
                 }
-                msg.append( '\n' );
-                msg.append( "Command line was: " ).append( cmd ).append( '\n' ).append( '\n' );
+                msg.append('\n');
+                msg.append("Command line was: ").append(cmd).append('\n').append('\n');
 
-                throw new MojoExecutionException( msg.toString() );
+                throw new MojoExecutionException(msg.toString());
             }
 
-            if ( StringUtils.isNotEmpty( output ) )
-            {
-                getLog().info( output );
+            if (StringUtils.isNotEmpty(output)) {
+                getLog().info(output);
             }
-        }
-        catch ( CommandLineException e )
-        {
-            throw new MojoExecutionException( "Unable to execute jdeps command: " + e.getMessage(), e );
+        } catch (CommandLineException e) {
+            throw new MojoExecutionException("Unable to execute jdeps command: " + e.getMessage(), e);
         }
 
         // ----------------------------------------------------------------------
         // Handle JDeps warnings
         // ----------------------------------------------------------------------
 
-        if ( StringUtils.isNotEmpty( err.getOutput() ) && getLog().isWarnEnabled() )
-        {
-            getLog().warn( "JDeps Warnings" );
+        if (StringUtils.isNotEmpty(err.getOutput()) && getLog().isWarnEnabled()) {
+            getLog().warn("JDeps Warnings");
 
-            StringTokenizer token = new StringTokenizer( err.getOutput(), "\n" );
-            while ( token.hasMoreTokens() )
-            {
+            StringTokenizer token = new StringTokenizer(err.getOutput(), "\n");
+            while (token.hasMoreTokens()) {
                 String current = token.nextToken().trim();
 
-                getLog().warn( current );
+                getLog().warn(current);
             }
         }
     }
-    
-    private Toolchain getToolchain()
-    {
+
+    private Toolchain getToolchain() {
         Toolchain tc = null;
-        if ( toolchainManager != null )
-        {
-            tc = toolchainManager.getToolchainFromBuildContext( "jdk", session );
+        if (toolchainManager != null) {
+            tc = toolchainManager.getToolchainFromBuildContext("jdk", session);
 
-            if ( tc == null )
-            {
+            if (tc == null) {
                 // Maven 3.2.6 has plugin execution scoped Toolchain Support
-                try
-                {
-                    Method getToolchainsMethod =
-                        toolchainManager.getClass().getMethod( "getToolchains", MavenSession.class, String.class,
-                                                               Map.class );
+                try {
+                    Method getToolchainsMethod = toolchainManager
+                            .getClass()
+                            .getMethod("getToolchains", MavenSession.class, String.class, Map.class);
 
-                    @SuppressWarnings( "unchecked" )
-                    List<Toolchain> tcs =
-                        (List<Toolchain>) getToolchainsMethod.invoke( toolchainManager, session, "jdk",
-                                                                      Collections.singletonMap( "version", "[1.8,)" ) );
+                    @SuppressWarnings("unchecked")
+                    List<Toolchain> tcs = (List<Toolchain>) getToolchainsMethod.invoke(
+                            toolchainManager, session, "jdk", Collections.singletonMap("version", "[1.8,)"));
 
-                    if ( tcs != null && tcs.size() > 0 )
-                    {
+                    if (tcs != null && tcs.size() > 0) {
                         // pick up latest, jdeps of JDK9 has more options compared to JDK8
-                        tc = tcs.get( tcs.size() - 1 );
+                        tc = tcs.get(tcs.size() - 1);
                     }
-                }
-                catch ( NoSuchMethodException e )
-                {
+                } catch (NoSuchMethodException e) {
                     // ignore
-                }
-                catch ( SecurityException e )
-                {
+                } catch (SecurityException e) {
                     // ignore
-                }
-                catch ( IllegalAccessException e )
-                {
+                } catch (IllegalAccessException e) {
                     // ignore
-                }
-                catch ( IllegalArgumentException e )
-                {
+                } catch (IllegalArgumentException e) {
                     // ignore
-                }
-                catch ( InvocationTargetException e )
-                {
+                } catch (InvocationTargetException e) {
                     // ignore
                 }
             }
@@ -642,12 +574,11 @@ public abstract class AbstractJDepsMojo
         return tc;
     }
 
-    protected boolean isFailOnWarning()
-    {
+    protected boolean isFailOnWarning() {
         return failOnWarning;
     }
-    
+
     protected abstract String getClassesDirectory();
-    
+
     protected abstract Collection<Path> getClassPath() throws DependencyResolutionRequiredException;
 }
