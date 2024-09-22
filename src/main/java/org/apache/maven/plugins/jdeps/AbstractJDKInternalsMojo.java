@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.jdeps;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.jdeps;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.jdeps;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -27,17 +26,14 @@ import org.codehaus.plexus.util.cli.Commandline;
 
 /**
  * Abstract Mojo for verifying code with jdkinternals
- *  
+ *
  * @author Robert Scholte
  */
-public abstract class AbstractJDKInternalsMojo extends AbstractJDepsMojo
-{
+public abstract class AbstractJDKInternalsMojo extends AbstractJDepsMojo {
 
     @Override
-    protected void addJDepsOptions( Commandline cmd, Set<Path> dependenciesToAnalyze )
-        throws MojoFailureException
-    {
-        super.addJDepsOptions( cmd, dependenciesToAnalyze );
-        cmd.createArg().setValue( "-jdkinternals" );
+    protected void addJDepsOptions(Commandline cmd, Set<Path> dependenciesToAnalyze) throws MojoFailureException {
+        super.addJDepsOptions(cmd, dependenciesToAnalyze);
+        cmd.createArg().setValue("-jdkinternals");
     }
 }
