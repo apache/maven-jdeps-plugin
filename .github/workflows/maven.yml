@@ -27,4 +27,4 @@ jobs:
     uses: apache/maven-gh-actions-shared/.github/workflows/maven-verify.yml@v4
     with:
       jdk-distribution-matrix: '[ "zulu", "microsoft", "liberica", "adopt-openj9" ]'
-      matrix-exclude: '[{ "jdk": "8", "distribution": "microsoft"}]'
+      matrix-exclude: '[{ "jdk": "8", "distribution": "microsoft"},{ "jdk": "8", "os": "macos-latest"}]'
