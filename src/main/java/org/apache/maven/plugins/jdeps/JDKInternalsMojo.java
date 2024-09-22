@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.jdeps;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.jdeps;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.jdeps;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,32 +31,29 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Check if main classes depend on internal JDK classes
- * 
+ *
  * @author Robert Scholte
  *
  */
-@Mojo( name = "jdkinternals", 
-       requiresDependencyResolution = ResolutionScope.COMPILE,
-       defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true )
-public class JDKInternalsMojo
-    extends AbstractJDepsMojo
-{
+@Mojo(
+        name = "jdkinternals",
+        requiresDependencyResolution = ResolutionScope.COMPILE,
+        defaultPhase = LifecyclePhase.PROCESS_CLASSES,
+        threadSafe = true)
+public class JDKInternalsMojo extends AbstractJDepsMojo {
 
     @Override
-    protected String getClassesDirectory()
-    {
+    protected String getClassesDirectory() {
         return getProject().getBuild().getOutputDirectory();
     }
-    
-    @Override
-    protected Collection<Path> getClassPath()
-        throws DependencyResolutionRequiredException
-    {
-        Set<Path> classPath = new LinkedHashSet<>( getProject().getCompileClasspathElements().size() );
 
-        for ( String elm : getProject().getCompileClasspathElements() )
-        {
-            classPath.add( Paths.get( elm ) );
+    @Override
+    protected Collection<Path> getClassPath() throws DependencyResolutionRequiredException {
+        Set<Path> classPath =
+                new LinkedHashSet<>(getProject().getCompileClasspathElements().size());
+
+        for (String elm : getProject().getCompileClasspathElements()) {
+            classPath.add(Paths.get(elm));
         }
 
         return classPath;

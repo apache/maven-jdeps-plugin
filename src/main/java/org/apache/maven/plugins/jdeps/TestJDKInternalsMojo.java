@@ -1,5 +1,3 @@
-package org.apache.maven.plugins.jdeps;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +16,7 @@ package org.apache.maven.plugins.jdeps;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.jdeps;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,43 +32,39 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Check if test classes depend on internal JDK classes
- * 
+ *
  * @author Robert Scholte
  *
  */
-@Mojo( name = "test-jdkinternals", 
-       requiresDependencyResolution = ResolutionScope.TEST,
-       defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES, threadSafe = true )
-public class TestJDKInternalsMojo
-    extends AbstractJDepsMojo
-{
+@Mojo(
+        name = "test-jdkinternals",
+        requiresDependencyResolution = ResolutionScope.TEST,
+        defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES,
+        threadSafe = true)
+public class TestJDKInternalsMojo extends AbstractJDepsMojo {
     /**
      * Indicates whether the build will continue even if there are jdeps warnings.
      */
-    @Parameter( defaultValue = "true", property = "jdeps.test.failOnWarning" )
+    @Parameter(defaultValue = "true", property = "jdeps.test.failOnWarning")
     private boolean failOnWarning;
-    
+
     @Override
-    protected boolean isFailOnWarning()
-    {
+    protected boolean isFailOnWarning() {
         return failOnWarning;
     }
-    
+
     @Override
-    protected String getClassesDirectory()
-    {
+    protected String getClassesDirectory() {
         return getProject().getBuild().getTestOutputDirectory();
     }
-    
-    @Override
-    protected Collection<Path> getClassPath()
-        throws DependencyResolutionRequiredException
-    {
-        Set<Path> classPath = new LinkedHashSet<>( getProject().getTestClasspathElements().size() );
 
-        for ( String elm : getProject().getTestClasspathElements() )
-        {
-            classPath.add( Paths.get( elm ) );
+    @Override
+    protected Collection<Path> getClassPath() throws DependencyResolutionRequiredException {
+        Set<Path> classPath =
+                new LinkedHashSet<>(getProject().getTestClasspathElements().size());
+
+        for (String elm : getProject().getTestClasspathElements()) {
+            classPath.add(Paths.get(elm));
         }
 
         return classPath;
