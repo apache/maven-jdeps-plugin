@@ -18,6 +18,8 @@
  */
 package org.apache.maven.plugins.jdeps;
 
+import javax.inject.Inject;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -29,6 +31,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.toolchain.ToolchainManager;
 
 /**
  * Check if test classes depend on internal JDK classes
@@ -47,6 +50,11 @@ public class TestJDKInternalsMojo extends AbstractJDepsMojo {
      */
     @Parameter(defaultValue = "true", property = "jdeps.test.failOnWarning")
     private boolean failOnWarning;
+
+    @Inject
+    public TestJDKInternalsMojo(ToolchainManager toolchainManager) {
+        super(toolchainManager);
+    }
 
     @Override
     protected boolean isFailOnWarning() {

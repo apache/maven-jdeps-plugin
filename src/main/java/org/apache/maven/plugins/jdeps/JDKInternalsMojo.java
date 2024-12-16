@@ -18,6 +18,8 @@
  */
 package org.apache.maven.plugins.jdeps;
 
+import javax.inject.Inject;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -28,6 +30,7 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.toolchain.ToolchainManager;
 
 /**
  * Check if main classes depend on internal JDK classes
@@ -41,6 +44,11 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
         defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         threadSafe = true)
 public class JDKInternalsMojo extends AbstractJDepsMojo {
+
+    @Inject
+    public JDKInternalsMojo(ToolchainManager toolchainManager) {
+        super(toolchainManager);
+    }
 
     @Override
     protected String getClassesDirectory() {
