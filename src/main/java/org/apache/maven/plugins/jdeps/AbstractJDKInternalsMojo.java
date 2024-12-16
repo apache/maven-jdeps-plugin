@@ -18,8 +18,6 @@
  */
 package org.apache.maven.plugins.jdeps;
 
-import javax.inject.Inject;
-
 import java.nio.file.Path;
 import java.util.Set;
 
@@ -34,7 +32,6 @@ import org.codehaus.plexus.util.cli.Commandline;
  */
 public abstract class AbstractJDKInternalsMojo extends AbstractJDepsMojo {
 
-    @Inject
     protected AbstractJDKInternalsMojo(ToolchainManager toolchainManager) {
         super(toolchainManager);
     }
