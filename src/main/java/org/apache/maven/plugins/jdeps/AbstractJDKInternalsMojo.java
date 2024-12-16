@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.Set;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.toolchain.ToolchainManager;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
@@ -30,6 +31,10 @@ import org.codehaus.plexus.util.cli.Commandline;
  * @author Robert Scholte
  */
 public abstract class AbstractJDKInternalsMojo extends AbstractJDepsMojo {
+
+    protected AbstractJDKInternalsMojo(ToolchainManager toolchainManager) {
+        super(toolchainManager);
+    }
 
     @Override
     protected void addJDepsOptions(Commandline cmd, Set<Path> dependenciesToAnalyze) throws MojoFailureException {
