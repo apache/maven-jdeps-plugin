@@ -43,7 +43,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.jdeps.consumers.JDepsConsumer;
 import org.apache.maven.project.MavenProject;
@@ -132,9 +131,6 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     @Parameter(property = "jdeps.dotOutput")
     private File dotOutput;
 
-    //    @Parameter( defaultValue = "false", property = "jdeps.summaryOnly" )
-    //    private boolean summaryOnly;
-
     /**
      * <dl>
      *   <dt>package</dt><dd>Print package-level dependencies excluding dependencies within the same archive<dd/>
@@ -152,18 +148,6 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
      */
     @Parameter
     private List<String> packages;
-
-    //    /**
-    //     * A comma-separated list to find dependences in the given package (may be given multiple times)
-    //     */
-    //    @Parameter( property = "jdeps.pkgnames" )
-    //    private String packageNames;
-    //
-    //    /**
-    //     * Finds dependences in packages matching pattern (-p and -e are exclusive)
-    //     */
-    //    @Parameter( property = "jdeps.regex" )
-    //    private String regex;
 
     /**
      * Restrict analysis to classes matching pattern. This option filters the list of classes to be analyzed. It can be
@@ -200,8 +184,11 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     @Parameter(property = "jdeps.module")
     private String module;
 
-    @Component
-    private ToolchainManager toolchainManager;
+    private final ToolchainManager toolchainManager;
+
+    protected AbstractJDepsMojo(ToolchainManager toolchainManager) {
+        this.toolchainManager = toolchainManager;
+    }
 
     protected MavenProject getProject() {
         return project;
@@ -264,11 +251,6 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             cmd.createArg().setFile(dotOutput);
         }
 
-        //        if ( summaryOnly )
-        //        {
-        //            cmd.createArg().setValue( "-s" );
-        //        }
-
         if (verbose != null) {
             if ("class".equals(verbose)) {
                 cmd.createArg().setValue("-verbose:class");
@@ -305,21 +287,6 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             }
         }
 
-        //        if ( packageNames != null )
-        //        {
-        //            for ( String pkgName : packageNames.split( "[,:;]" ) )
-        //            {
-        //                cmd.createArg().setValue( "-p" );
-        //                cmd.createArg().setValue( pkgName );
-        //            }
-        //        }
-        //
-        //        if ( regex != null )
-        //        {
-        //            cmd.createArg().setValue( "-e" );
-        //            cmd.createArg().setValue( regex );
-        //        }
-
         if (include != null) {
             cmd.createArg().setValue("-include");
             cmd.createArg().setValue(include);
@@ -346,8 +313,6 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         if (recursive) {
             cmd.createArg().setValue("-R");
         }
-
-        // cmd.createArg().setValue( "-version" );
     }
 
     protected Set<Path> getDependenciesToAnalyze(boolean includeClasspath)
