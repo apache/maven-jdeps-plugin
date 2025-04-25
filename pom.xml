@@ -52,8 +52,8 @@ under the License.
     <url>https://github.com/apache/maven-jdeps-plugin/tree/${project.scm.tag}</url>
   </scm>
   <issueManagement>
-    <system>JIRA</system>
-    <url>https://issues.apache.org/jira/browse/MJDEPS</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/apache/maven-jdeps-plugin/issues</url>
   </issueManagement>
   <ciManagement>
     <system>Jenkins</system>
