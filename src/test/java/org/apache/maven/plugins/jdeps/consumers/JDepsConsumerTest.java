@@ -44,7 +44,7 @@ public class JDepsConsumerTest {
     }
 
     @Test
-    public void testJDKInternalAPI_Linux_Java8() {
+    public void testJDKInternalAPILinuxJava8() {
         consumer = new JDepsConsumer();
         consumer.consumeLine("classes -> JDK removed internal API");
         consumer.consumeLine("classes -> java.base");
@@ -63,7 +63,7 @@ public class JDepsConsumerTest {
     }
 
     @Test
-    public void testJDKInternalAPI_Java8_291() {
+    public void testJDKInternalAPIJava8u291() {
         consumer = new JDepsConsumer();
         consumer.consumeLine("classes -> JDK removed internal API");
         consumer.consumeLine("classes -> java.base");
