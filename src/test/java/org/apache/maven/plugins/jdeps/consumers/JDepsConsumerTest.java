@@ -22,12 +22,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JDepsConsumerTest {
+class JDepsConsumerTest {
 
     private JDepsConsumer consumer;
 
     @Test
-    public void testJDKInterAPI() {
+    void jdkInterAPI() {
 
         consumer = new JDepsConsumer();
         consumer.consumeLine("test-classes -> java.base");
@@ -44,7 +44,7 @@ public class JDepsConsumerTest {
     }
 
     @Test
-    public void testJDKInternalAPILinuxJava8() {
+    void jdkInternalAPILinuxJava8() {
         consumer = new JDepsConsumer();
         consumer.consumeLine("classes -> JDK removed internal API");
         consumer.consumeLine("classes -> java.base");
@@ -63,7 +63,7 @@ public class JDepsConsumerTest {
     }
 
     @Test
-    public void testJDKInternalAPIJava8u291() {
+    void jdkInternalAPIJava8u291() {
         consumer = new JDepsConsumer();
         consumer.consumeLine("classes -> JDK removed internal API");
         consumer.consumeLine("classes -> java.base");
@@ -80,7 +80,7 @@ public class JDepsConsumerTest {
     }
 
     @Test
-    public void testProfile() {
+    void profile() {
         consumer = new JDepsConsumer();
         consumer.consumeLine("E:\\java-workspace\\apache-maven-plugins\\maven-jdeps-plugin\\target\\classes -> "
                 + "C:\\Program Files\\Java\\jdk1.8.0\\jre\\lib\\rt.jar (compact1)");
