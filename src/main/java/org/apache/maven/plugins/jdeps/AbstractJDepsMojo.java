@@ -409,6 +409,12 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             // Try to find jdepsExe from PATH environment variable
             // ----------------------------------------------------------------------
             String path = env.getProperty("PATH");
+            if (path == null) {
+                path = env.getProperty("Path");
+            }
+            if (path == null) {
+                path = env.getProperty("path");
+            }
             if (path != null) {
                 String[] pathDirs = path.split(File.pathSeparator);
                 for (String pathDir : pathDirs) {
