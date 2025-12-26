@@ -421,8 +421,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             }
 
             throw new IOException(
-                    "The jdeps executable '" + jdepsExe
-                            + "' doesn't exist or is not a file. Verify the JAVA_HOME environment variable or ensure jdeps is available in PATH.");
+                    "Unable to locate the jdeps executable. Verify that JAVA_HOME is set correctly or ensure that jdeps is available on the system PATH.");
         }
 
         return jdepsExe.getAbsolutePath();
