@@ -414,7 +414,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
                 String[] pathDirs = path.split(File.pathSeparator);
                 for (String pathDir : pathDirs) {
                     File pathJdepsExe = new File(pathDir, jdepsCommand);
-                    if (pathJdepsExe.exists() && pathJdepsExe.isFile()) {
+                    if (pathJdepsExe.exists() && pathJdepsExe.isFile() && pathJdepsExe.canExecute()) {
                         return pathJdepsExe.getAbsolutePath();
                     }
                 }
