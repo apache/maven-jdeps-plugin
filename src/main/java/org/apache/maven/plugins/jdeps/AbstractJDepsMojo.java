@@ -184,6 +184,14 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     @Parameter(property = "jdeps.module")
     private String module;
 
+    /**
+     * Show only internal API usage.
+     *
+     * @since 3.2.0
+     */
+    @Parameter(defaultValue = "false", property = "jdeps.jdkinternals")
+    private boolean jdkinternals;
+
     private final ToolchainManager toolchainManager;
 
     protected AbstractJDepsMojo(ToolchainManager toolchainManager) {
@@ -312,6 +320,10 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
 
         if (recursive) {
             cmd.createArg().setValue("-R");
+        }
+
+        if (jdkinternals) {
+            cmd.createArg().setValue("-jdkinternals");
         }
     }
 
