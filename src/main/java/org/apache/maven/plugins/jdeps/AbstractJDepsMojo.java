@@ -429,6 +429,9 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
                     "Unable to locate the jdeps executable. Verify that JAVA_HOME is set correctly or ensure that jdeps is available on the system PATH.");
         }
 
+        if (!jdepsExe.canExecute()) {
+            throw new IOException("The jdeps executable '" + jdepsExe + "' is not executable.");
+        }
         return jdepsExe.getAbsolutePath();
     }
 
