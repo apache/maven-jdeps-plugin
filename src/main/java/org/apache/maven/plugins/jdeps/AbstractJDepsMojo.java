@@ -389,8 +389,8 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         // ----------------------------------------------------------------------
         // Try to find jdepsExe from JAVA_HOME environment variable
         // ----------------------------------------------------------------------
+        Properties env = CommandLineUtils.getSystemEnvVars();
         if (!jdepsExe.exists() || !jdepsExe.isFile()) {
-            Properties env = CommandLineUtils.getSystemEnvVars();
             String javaHome = env.getProperty("JAVA_HOME");
             if (!StringUtils.isEmpty(javaHome)) {
                 if ((!new File(javaHome).getCanonicalFile().exists())
@@ -408,14 +408,19 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             // ----------------------------------------------------------------------
             // Try to find jdepsExe from PATH environment variable
             // ----------------------------------------------------------------------
-            Properties env = CommandLineUtils.getSystemEnvVars();
             String path = env.getProperty("PATH");
             if (path != null) {
                 String[] pathDirs = path.split(File.pathSeparator);
                 for (String pathDir : pathDirs) {
+                    if (StringUtils.isBlank(pathDir)) {
+                        continue;
+                    }
                     File pathJdepsExe = new File(pathDir, jdepsCommand);
-                    if (pathJdepsExe.exists() && pathJdepsExe.isFile() && pathJdepsExe.canExecute()) {
-                        return pathJdepsExe.getAbsolutePath();
+                    File canonicalPathJdepsExe = pathJdepsExe.getCanonicalFile();
+                    if (canonicalPathJdepsExe.exists()
+                            && canonicalPathJdepsExe.isFile()
+                            && canonicalPathJdepsExe.canExecute()) {
+                        return canonicalPathJdepsExe.getAbsolutePath();
                     }
                 }
             }
