@@ -392,22 +392,37 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         if (!jdepsExe.exists() || !jdepsExe.isFile()) {
             Properties env = CommandLineUtils.getSystemEnvVars();
             String javaHome = env.getProperty("JAVA_HOME");
-            if (StringUtils.isEmpty(javaHome)) {
-                throw new IOException("The environment variable JAVA_HOME is not correctly set.");
-            }
-            if ((!new File(javaHome).getCanonicalFile().exists())
-                    || (new File(javaHome).getCanonicalFile().isFile())) {
-                throw new IOException("The environment variable JAVA_HOME=" + javaHome
-                        + " doesn't exist or is not a valid directory.");
-            }
+            if (!StringUtils.isEmpty(javaHome)) {
+                if ((!new File(javaHome).getCanonicalFile().exists())
+                        || (new File(javaHome).getCanonicalFile().isFile())) {
+                    throw new IOException("The environment variable JAVA_HOME=" + javaHome
+                            + " doesn't exist or is not a valid directory.");
+                }
 
-            jdepsExe = new File(javaHome + File.separator + "bin", jdepsCommand);
+                jdepsExe = new File(javaHome + File.separator + "bin", jdepsCommand);
+            }
         }
 
         if (!jdepsExe.getCanonicalFile().exists()
                 || !jdepsExe.getCanonicalFile().isFile()) {
-            throw new IOException("The jdeps executable '" + jdepsExe
-                    + "' doesn't exist or is not a file. Verify the JAVA_HOME environment variable.");
+            // ----------------------------------------------------------------------
+            // Try to find jdepsExe from PATH environment variable
+            // ----------------------------------------------------------------------
+            Properties env = CommandLineUtils.getSystemEnvVars();
+            String path = env.getProperty("PATH");
+            if (path != null) {
+                String[] pathDirs = path.split(File.pathSeparator);
+                for (String pathDir : pathDirs) {
+                    File pathJdepsExe = new File(pathDir, jdepsCommand);
+                    if (pathJdepsExe.exists() && pathJdepsExe.isFile()) {
+                        return pathJdepsExe.getAbsolutePath();
+                    }
+                }
+            }
+
+            throw new IOException(
+                    "The jdeps executable '" + jdepsExe
+                            + "' doesn't exist or is not a file. Verify the JAVA_HOME environment variable or ensure jdeps is available in PATH.");
         }
 
         return jdepsExe.getAbsolutePath();
