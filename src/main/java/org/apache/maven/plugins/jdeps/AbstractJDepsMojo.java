@@ -389,27 +389,55 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         // ----------------------------------------------------------------------
         // Try to find jdepsExe from JAVA_HOME environment variable
         // ----------------------------------------------------------------------
+        Properties env = CommandLineUtils.getSystemEnvVars();
         if (!jdepsExe.exists() || !jdepsExe.isFile()) {
-            Properties env = CommandLineUtils.getSystemEnvVars();
             String javaHome = env.getProperty("JAVA_HOME");
-            if (StringUtils.isEmpty(javaHome)) {
-                throw new IOException("The environment variable JAVA_HOME is not correctly set.");
-            }
-            if ((!new File(javaHome).getCanonicalFile().exists())
-                    || (new File(javaHome).getCanonicalFile().isFile())) {
-                throw new IOException("The environment variable JAVA_HOME=" + javaHome
-                        + " doesn't exist or is not a valid directory.");
-            }
+            if (!StringUtils.isEmpty(javaHome)) {
+                if ((!new File(javaHome).getCanonicalFile().exists())
+                        || (new File(javaHome).getCanonicalFile().isFile())) {
+                    throw new IOException("The environment variable JAVA_HOME=" + javaHome
+                            + " doesn't exist or is not a valid directory.");
+                }
 
-            jdepsExe = new File(javaHome + File.separator + "bin", jdepsCommand);
+                jdepsExe = new File(javaHome + File.separator + "bin", jdepsCommand);
+            }
         }
 
         if (!jdepsExe.getCanonicalFile().exists()
                 || !jdepsExe.getCanonicalFile().isFile()) {
-            throw new IOException("The jdeps executable '" + jdepsExe
-                    + "' doesn't exist or is not a file. Verify the JAVA_HOME environment variable.");
+            // ----------------------------------------------------------------------
+            // Try to find jdepsExe from PATH environment variable
+            // ----------------------------------------------------------------------
+            String path = env.getProperty("PATH");
+            if (path == null) {
+                path = env.getProperty("Path");
+            }
+            if (path == null) {
+                path = env.getProperty("path");
+            }
+            if (path != null) {
+                String[] pathDirs = path.split(File.pathSeparator);
+                for (String pathDir : pathDirs) {
+                    if (StringUtils.isBlank(pathDir)) {
+                        continue;
+                    }
+                    File pathJdepsExe = new File(pathDir, jdepsCommand);
+                    File canonicalPathJdepsExe = pathJdepsExe.getCanonicalFile();
+                    if (canonicalPathJdepsExe.exists()
+                            && canonicalPathJdepsExe.isFile()
+                            && canonicalPathJdepsExe.canExecute()) {
+                        return canonicalPathJdepsExe.getAbsolutePath();
+                    }
+                }
+            }
+
+            throw new IOException(
+                    "Unable to locate the jdeps executable. Verify that JAVA_HOME is set correctly or ensure that jdeps is available on the system PATH.");
         }
 
+        if (!jdepsExe.canExecute()) {
+            throw new IOException("The jdeps executable '" + jdepsExe + "' is not executable.");
+        }
         return jdepsExe.getAbsolutePath();
     }
 
