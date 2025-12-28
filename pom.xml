@@ -28,7 +28,7 @@ under the License.
   </parent>
 
   <artifactId>maven-jdeps-plugin</artifactId>
-  <version>3.2.0-SNAPSHOT</version>
+  <version>3.2.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven JDeps Plugin</name>
@@ -48,7 +48,7 @@ under the License.
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-jdeps-plugin.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-jdeps-plugin.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>maven-jdeps-plugin-3.2.0</tag>
     <url>https://github.com/apache/maven-jdeps-plugin/tree/${project.scm.tag}</url>
   </scm>
   <issueManagement>
@@ -69,7 +69,7 @@ under the License.
   <properties>
     <mavenVersion>3.9.12</mavenVersion>
     <javaVersion>8</javaVersion>
-    <project.build.outputTimestamp>2020-04-07T21:04:00Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-12-28T18:59:49Z</project.build.outputTimestamp>
 
     <version.maven-invoker-plugin>3.9.1</version.maven-invoker-plugin>
   </properties>
