@@ -54,10 +54,9 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Abstract Mojo for JDeps
+ * Abstract Mojo for JDeps.
  *
  * @author Robert Scholte
- *
  */
 public abstract class AbstractJDepsMojo extends AbstractMojo {
 
@@ -126,7 +125,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     private List<String> dependenciesToAnalyzeExcludes;
 
     /**
-     * Destination directory for DOT file output
+     * Destination directory for DOT file output.
      */
     @Parameter(property = "jdeps.dotOutput")
     private File dotOutput;
@@ -144,27 +143,27 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     /**
      * Finds dependences matching the specified package name.
      *
-     * @since 3.1.1.
+     * @since 3.1.1
      */
     @Parameter
     private List<String> packages;
 
     /**
      * Restrict analysis to classes matching pattern. This option filters the list of classes to be analyzed. It can be
-     * used together with <code>-p</code> and <code>-e</code> which apply pattern to the dependences
+     * used together with <code>-p</code> and <code>-e</code> which apply pattern to the dependences.
      */
     @Parameter(property = "jdeps.include")
     private String include;
 
     /**
      * Restrict analysis to APIs i.e. dependences from the signature of public and protected members of public classes
-     * including field type, method parameter types, returned type, checked exception types etc
+     * including field type, method parameter types, returned type, checked exception types etc.
      */
     @Parameter(defaultValue = "false", property = "jdeps.apionly")
     private boolean apiOnly;
 
     /**
-     * Show profile or the file containing a package
+     * Show profile or the file containing a package.
      */
     @Parameter(defaultValue = "false", property = "jdeps.profile")
     private boolean profile;
