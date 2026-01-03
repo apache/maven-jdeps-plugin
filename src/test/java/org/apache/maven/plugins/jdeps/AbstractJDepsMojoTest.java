@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.toolchain.ToolchainManager;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ class AbstractJDepsMojoTest {
         }
 
         @Override
-        protected Collection<Path> getClassPath() throws DependencyResolutionRequiredException {
+        protected Collection<Path> getClassPath() {
             return new HashSet<>();
         }
     }

@@ -1,3 +1,4 @@
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -141,7 +142,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     private String verbose;
 
     /**
-     * Finds dependences matching the specified package name.
+     * Finds dependencies matching the specified package name.
      *
      * @since 3.1.1
      */
@@ -150,14 +151,14 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
 
     /**
      * Restrict analysis to classes matching pattern. This option filters the list of classes to be analyzed. It can be
-     * used together with <code>-p</code> and <code>-e</code> which apply pattern to the dependences.
+     * used together with <code>-p</code> and <code>-e</code> which apply pattern to the dependencies.
      */
     @Parameter(property = "jdeps.include")
     private String include;
 
     /**
-     * Restrict analysis to APIs i.e. dependences from the signature of public and protected members of public classes
-     * including field type, method parameter types, returned type, checked exception types etc.
+     * Restrict analysis to APIs; i.e. dependencies from the signature of public and protected members of public classes
+     * including field type, method parameter types, returned type, checked exception types, etc.
      */
     @Parameter(defaultValue = "false", property = "jdeps.apionly")
     private boolean apiOnly;
@@ -170,7 +171,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
 
     /**
      * Recursively traverse all dependencies. The {@code -R} option implies {@code -filter:none}.  If {@code -p},
-     * {@code -e}, {@code -f} option is specified, only the matching dependences are analyzed.
+     * {@code -e}, {@code -f} option is specified, only the matching dependencies are analyzed.
      */
     @Parameter(defaultValue = "false", property = "jdeps.recursive")
     private boolean recursive;
@@ -343,7 +344,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             if (dependenciesToAnalyzeExcludes != null) {
                 excludes = MatchPatterns.from(dependenciesToAnalyzeExcludes);
             } else {
-                excludes = MatchPatterns.from(Collections.<String>emptyList());
+                excludes = MatchPatterns.from(Collections.emptyList());
             }
 
             for (Artifact artifact : project.getArtifacts()) {

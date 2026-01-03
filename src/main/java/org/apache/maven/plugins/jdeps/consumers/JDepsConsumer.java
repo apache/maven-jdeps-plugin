@@ -47,7 +47,7 @@ public class JDepsConsumer extends CommandLineUtils.StringStreamConsumer impleme
      *  <dt>value</dt><dd>Offending details</dd>
      * </dl>
      */
-    private Map<String, String> offendingPackages = new HashMap<String, String>();
+    private Map<String, String> offendingPackages = new HashMap<>();
 
     private static final Pattern PROFILE = Pattern.compile("\\s+->\\s([a-z\\.]+)\\s+(\\S+)");
 
@@ -57,7 +57,7 @@ public class JDepsConsumer extends CommandLineUtils.StringStreamConsumer impleme
      *  <dt>value</dt><dd>The profile</dd>
      * </dl>
      */
-    private Map<String, String> profiles = new HashMap<String, String>();
+    private Map<String, String> profiles = new HashMap<>();
 
     public void consumeLine(String line) {
         super.consumeLine(line);
@@ -72,7 +72,6 @@ public class JDepsConsumer extends CommandLineUtils.StringStreamConsumer impleme
         matcher = PROFILE.matcher(line);
         if (matcher.matches()) {
             profiles.put(matcher.group(1), matcher.group(2));
-            return;
         }
     }
 
