@@ -344,7 +344,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             if (dependenciesToAnalyzeExcludes != null) {
                 excludes = MatchPatterns.from(dependenciesToAnalyzeExcludes);
             } else {
-                excludes = MatchPatterns.from(Collections.<String>emptyList());
+                excludes = MatchPatterns.from(Collections.emptyList());
             }
 
             for (Artifact artifact : project.getArtifacts()) {
