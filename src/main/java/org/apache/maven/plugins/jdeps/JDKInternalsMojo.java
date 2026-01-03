@@ -33,10 +33,9 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.toolchain.ToolchainManager;
 
 /**
- * Check if main classes depend on internal JDK classes
+ * Check if main classes depend on internal JDK classes.
  *
  * @author Robert Scholte
- *
  */
 @Mojo(
         name = "jdkinternals",
