@@ -54,10 +54,9 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Abstract Mojo for JDeps
+ * Abstract Mojo for JDeps.
  *
  * @author Robert Scholte
- *
  */
 public abstract class AbstractJDepsMojo extends AbstractMojo {
 
@@ -126,7 +125,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     private List<String> dependenciesToAnalyzeExcludes;
 
     /**
-     * Destination directory for DOT file output
+     * Destination directory for DOT file output.
      */
     @Parameter(property = "jdeps.dotOutput")
     private File dotOutput;
@@ -144,7 +143,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
     /**
      * Finds dependencies matching the specified package name.
      *
-     * @since 3.1.1.
+     * @since 3.1.1
      */
     @Parameter
     private List<String> packages;

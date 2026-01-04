@@ -27,10 +27,9 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 
 /**
- * Consumes the output of the jdeps tool
+ * Consumes the output of the jdeps tool.
  *
  * @author Robert Scholte
- *
  */
 public class JDepsConsumer extends CommandLineUtils.StringStreamConsumer implements StreamConsumer {
 
