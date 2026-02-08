@@ -23,7 +23,7 @@ under the License.
   <parent>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-plugins</artifactId>
-    <version>45</version>
+    <version>47</version>
     <relativePath />
   </parent>
 
@@ -70,8 +70,6 @@ under the License.
     <mavenVersion>3.9.12</mavenVersion>
     <javaVersion>8</javaVersion>
     <project.build.outputTimestamp>2025-12-28T19:00:01Z</project.build.outputTimestamp>
-
-    <version.maven-invoker-plugin>3.9.1</version.maven-invoker-plugin>
   </properties>
 
   <dependencies>
