@@ -22,14 +22,17 @@ def buildLog = new File( basedir, 'build.log' )
 
 def found = false;
 
-assert buildLog.readLines().each { String line -> 
+assert buildLog.readLines().each { String line ->
 
   if ( line.startsWith( '[DEBUG] Executing: ' ) )
   {
     assert line.count( "classes" ) == 1 : "invalid classes count: " + line.count( "classes" )
 
-    assert line.count( "plexus-utils-3.0.24.jar" ) == 1 : "invalid plexus-utils-3.0.24.jar count: " + line.count( "plexus-utils-3.0.24.jar" )
-    
+    // Match any plexus-utils-<version>.jar rather than pinning an exact version,
+    // so future Dependabot bumps of this dependency don't need a matching edit here.
+    def plexusUtilsJarCount = ( line =~ /plexus-utils-\d+(\.\d+)*\.jar/ ).count
+    assert plexusUtilsJarCount == 1 : "invalid plexus-utils jar count: " + plexusUtilsJarCount
+
     found = true;
   }
 }
