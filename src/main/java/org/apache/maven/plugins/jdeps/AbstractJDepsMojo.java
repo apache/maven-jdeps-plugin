@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -77,11 +79,22 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
 
     /**
      * Specifies the version when processing multi-release JAR files version should be an integer >=9 or base.
+     * <p>
+     * When left unset, and any analyzed JAR turns out to be a multi-release JAR, {@code base} is used
+     * automatically (provided the resolved {@code jdeps} executable supports the option) so the build doesn't
+     * fail with {@code is a multi-release jar file but --multi-release option is not set} the moment a
+     * dependency ships one.
      *
      * @since 3.1.1
      */
     @Parameter(property = "jdeps.multiRelease")
     private String multiRelease;
+
+    /**
+     * The effective value of {@link #multiRelease}: either the user-configured value, or the value
+     * auto-detected by {@link #resolveMultiRelease(String, Set)}.
+     */
+    private String effectiveMultiRelease;
 
     /**
      * Whether only the sources need to be compatible or also every dependency on the classpath.
@@ -225,6 +238,13 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         } catch (DependencyResolutionRequiredException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+
+        try {
+            effectiveMultiRelease = resolveMultiRelease(jExecutable, dependenciesToAnalyze);
+        } catch (DependencyResolutionRequiredException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+
         addJDepsOptions(cmd, dependenciesToAnalyze);
         addJDepsClasses(cmd, dependenciesToAnalyze);
 
@@ -308,9 +328,9 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             cmd.createArg().setValue(module);
         }
 
-        if (multiRelease != null) {
+        if (effectiveMultiRelease != null) {
             cmd.createArg().setValue("--multi-release");
-            cmd.createArg().setValue(multiRelease);
+            cmd.createArg().setValue(effectiveMultiRelease);
         }
 
         if (apiOnly) {
@@ -363,6 +383,98 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         // <classes> can be a pathname to a .class file, a directory, a JAR file, or a fully-qualified class name.
         for (Path dependencyToAnalyze : dependenciesToAnalyze) {
             cmd.createArg().setFile(dependencyToAnalyze.toFile());
+        }
+    }
+
+    /**
+     * Determines the value to pass as {@code --multi-release}: the user-configured {@link #multiRelease}
+     * if set, otherwise {@code "base"} if any analyzed JAR is itself a multi-release JAR and the resolved
+     * {@code jdeps} executable understands the option (JDK 9+), otherwise {@code null} (option omitted).
+     */
+    private String resolveMultiRelease(String jdepsExecutable, Set<Path> dependenciesToAnalyze)
+            throws DependencyResolutionRequiredException {
+        if (multiRelease != null) {
+            return multiRelease;
+        }
+
+        boolean hasMultiReleaseJar = false;
+        for (Path path : dependenciesToAnalyze) {
+            if (isMultiReleaseJar(path)) {
+                hasMultiReleaseJar = true;
+                break;
+            }
+        }
+        if (!hasMultiReleaseJar) {
+            for (Path path : getClassPath()) {
+                if (isMultiReleaseJar(path)) {
+                    hasMultiReleaseJar = true;
+                    break;
+                }
+            }
+        }
+
+        if (hasMultiReleaseJar && jdepsSupportsMultiRelease(jdepsExecutable)) {
+            getLog().debug("Detected a multi-release JAR on the classpath; defaulting to --multi-release base");
+            return "base";
+        }
+
+        return null;
+    }
+
+    private static boolean isMultiReleaseJar(Path path) {
+        File file = path.toFile();
+        if (!file.isFile()) {
+            return false;
+        }
+        try (JarFile jarFile = new JarFile(file)) {
+            Manifest manifest = jarFile.getManifest();
+            return manifest != null
+                    && Boolean.parseBoolean(manifest.getMainAttributes().getValue("Multi-Release"));
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private boolean jdepsSupportsMultiRelease(String jdepsExecutable) {
+        Commandline versionCmd = new Commandline();
+        versionCmd.setExecutable(jdepsExecutable);
+        versionCmd.createArg().setValue("-version");
+
+        CommandLineUtils.StringStreamConsumer out = new CommandLineUtils.StringStreamConsumer();
+        CommandLineUtils.StringStreamConsumer err = new CommandLineUtils.StringStreamConsumer();
+        try {
+            int exitCode = CommandLineUtils.executeCommandLine(versionCmd, out, err);
+            return exitCode == 0 && featureVersion(out.getOutput()) >= 9;
+        } catch (CommandLineException e) {
+            getLog().debug("Unable to determine the jdeps version; assuming no multi-release JAR support", e);
+            return false;
+        }
+    }
+
+    /**
+     * Extracts the JDK feature version from a {@code jdeps -version}/{@code java -version} style string,
+     * handling both the pre-JEP 223 scheme ({@code 1.8.0_...} &rarr; {@code 8}) and the current one
+     * ({@code 17.0.20.1} &rarr; {@code 17}).
+     */
+    static int featureVersion(String versionOutput) {
+        String v = versionOutput == null ? "" : versionOutput.trim();
+        if (v.startsWith("1.")) {
+            v = v.substring(2);
+        }
+        int dot = v.indexOf('.');
+        String major = dot >= 0 ? v.substring(0, dot) : v;
+
+        int end = 0;
+        while (end < major.length() && Character.isDigit(major.charAt(end))) {
+            end++;
+        }
+        if (end == 0) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(major.substring(0, end));
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 
