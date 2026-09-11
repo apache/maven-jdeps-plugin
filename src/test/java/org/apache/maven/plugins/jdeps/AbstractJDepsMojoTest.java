@@ -29,6 +29,7 @@ import org.apache.maven.toolchain.ToolchainManager;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -87,5 +88,59 @@ class AbstractJDepsMojoTest {
         String cmdLine = cmd.toString();
         assertFalse(
                 cmdLine.contains("-jdkinternals"), "Command line should not contain -jdkinternals flag when disabled");
+    }
+
+    @Test
+    void testMultiReleaseOptionIsAddedWhenExplicitlyConfigured() throws Exception {
+        TestJDepsMojo mojo = new TestJDepsMojo(null);
+
+        Field effectiveMultiReleaseField = AbstractJDepsMojo.class.getDeclaredField("effectiveMultiRelease");
+        effectiveMultiReleaseField.setAccessible(true);
+        effectiveMultiReleaseField.set(mojo, "base");
+
+        Commandline cmd = new Commandline();
+        Set<Path> dependenciesToAnalyze = new HashSet<>();
+        dependenciesToAnalyze.add(Paths.get("/path/to/classes"));
+
+        mojo.addJDepsOptions(cmd, dependenciesToAnalyze);
+
+        String cmdLine = cmd.toString();
+        assertTrue(cmdLine.contains("--multi-release"), "Command line should contain --multi-release flag");
+        assertTrue(cmdLine.contains("base"), "Command line should contain the configured multi-release value");
+    }
+
+    @Test
+    void testMultiReleaseOptionNotAddedByDefault() throws Exception {
+        TestJDepsMojo mojo = new TestJDepsMojo(null);
+
+        Commandline cmd = new Commandline();
+        Set<Path> dependenciesToAnalyze = new HashSet<>();
+        dependenciesToAnalyze.add(Paths.get("/path/to/classes"));
+
+        mojo.addJDepsOptions(cmd, dependenciesToAnalyze);
+
+        String cmdLine = cmd.toString();
+        assertFalse(
+                cmdLine.contains("--multi-release"),
+                "Command line should not contain --multi-release flag unless resolved");
+    }
+
+    @Test
+    void testFeatureVersionParsesCurrentScheme() {
+        assertEquals(17, AbstractJDepsMojo.featureVersion("17.0.20.1"));
+        assertEquals(9, AbstractJDepsMojo.featureVersion("9-ea"));
+        assertEquals(21, AbstractJDepsMojo.featureVersion("21"));
+    }
+
+    @Test
+    void testFeatureVersionParsesLegacyScheme() {
+        assertEquals(8, AbstractJDepsMojo.featureVersion("1.8.0_292"));
+    }
+
+    @Test
+    void testFeatureVersionReturnsNegativeOneOnGarbage() {
+        assertEquals(-1, AbstractJDepsMojo.featureVersion(""));
+        assertEquals(-1, AbstractJDepsMojo.featureVersion(null));
+        assertEquals(-1, AbstractJDepsMojo.featureVersion("not a version"));
     }
 }
