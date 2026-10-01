@@ -20,8 +20,6 @@ package org.apache.maven.plugins.jdeps;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -640,26 +638,12 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
             tc = toolchainManager.getToolchainFromBuildContext("jdk", session);
 
             if (tc == null) {
-                // Maven 3.2.6 has plugin execution scoped Toolchain Support
-                try {
-                    Method getToolchainsMethod = toolchainManager
-                            .getClass()
-                            .getMethod("getToolchains", MavenSession.class, String.class, Map.class);
+                List<Toolchain> tcs =
+                        toolchainManager.getToolchains(session, "jdk", Collections.singletonMap("version", "[1.8,)"));
 
-                    @SuppressWarnings("unchecked")
-                    List<Toolchain> tcs = (List<Toolchain>) getToolchainsMethod.invoke(
-                            toolchainManager, session, "jdk", Collections.singletonMap("version", "[1.8,)"));
-
-                    if (tcs != null && !tcs.isEmpty()) {
-                        // pick up latest, jdeps of JDK9 has more options compared to JDK8
-                        tc = tcs.get(tcs.size() - 1);
-                    }
-                } catch (NoSuchMethodException
-                        | SecurityException
-                        | IllegalAccessException
-                        | IllegalArgumentException
-                        | InvocationTargetException e) {
-                    // ignore
+                if (tcs != null && !tcs.isEmpty()) {
+                    // pick up latest, jdeps of JDK9 has more options compared to JDK8
+                    tc = tcs.get(tcs.size() - 1);
                 }
             }
         }

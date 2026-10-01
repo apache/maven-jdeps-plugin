@@ -29,7 +29,7 @@ The JDeps Plugin uses the jdeps tool to analyze classes for internal API calls. 
 
 **NOTE:** The jdeps tool is available since JDK8.
 
-**NOTE:** The plugin has [toolchains support](http://maven.apache.org/guides/mini/guide-using-toolchains.html). When using Apache Maven 3.2.6, the build doesn't need to use toolchains itself, ie. use the `maven-toolchain-plugin`; the `maven-jdeps-plugin` can pick up a `jdk` toolchain defined in `toolchain.xml` independently from build configuration: it chooses a `jdk` toolchain from available configurations that have a version `1.8` or above.
+**NOTE:** The plugin has [toolchains support](http://maven.apache.org/guides/mini/guide-using-toolchains.html). The build doesn't need to use toolchains itself, ie. use the `maven-toolchain-plugin`; the `maven-jdeps-plugin` can pick up a `jdk` toolchain defined in `toolchain.xml` independently from build configuration: it chooses a `jdk` toolchain from available configurations that have a version `1.8` or above.
 
 ## Goals Overview
 
