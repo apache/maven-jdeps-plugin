@@ -212,6 +212,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         return project;
     }
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!new File(getClassesDirectory()).exists()) {
             getLog().debug("No classes to analyze");
