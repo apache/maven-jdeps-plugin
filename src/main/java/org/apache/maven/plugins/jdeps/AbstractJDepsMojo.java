@@ -589,9 +589,9 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         try {
             int exitCode = CommandLineUtils.executeCommandLine(cmd, out, err);
 
-            String output = (StringUtils.isEmpty(out.getOutput())
+            String output = StringUtils.isEmpty(out.getOutput())
                     ? null
-                    : '\n' + out.getOutput().trim());
+                    : '\n' + out.getOutput().trim();
 
             if (exitCode != 0) {
                 if (StringUtils.isNotEmpty(output)) {
