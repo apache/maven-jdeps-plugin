@@ -59,6 +59,7 @@ public class JDepsConsumer extends CommandLineUtils.StringStreamConsumer impleme
      */
     private Map<String, String> profiles = new HashMap<>();
 
+    @Override
     public void consumeLine(String line) {
         super.consumeLine(line);
         Matcher matcher;
