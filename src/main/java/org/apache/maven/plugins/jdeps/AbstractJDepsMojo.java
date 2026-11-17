@@ -489,7 +489,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
 
         File jdepsExe;
 
-        if (jdepsExecutable != null && !jdepsExecutable.isEmpty()) {
+        if (StringUtils.isNotEmpty(jdepsExecutable)) {
             jdepsExe = new File(jdepsExecutable);
 
             if (jdepsExe.isDirectory()) {
@@ -514,7 +514,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         Properties env = CommandLineUtils.getSystemEnvVars();
         if (!jdepsExe.exists() || !jdepsExe.isFile()) {
             String javaHome = env.getProperty("JAVA_HOME");
-            if (!(javaHome == null || javaHome.isEmpty())) {
+            if (!StringUtils.isEmpty(javaHome)) {
                 if ((!new File(javaHome).getCanonicalFile().exists())
                         || (new File(javaHome).getCanonicalFile().isFile())) {
                     throw new IOException("The environment variable JAVA_HOME=" + javaHome
@@ -590,18 +590,18 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         try {
             int exitCode = CommandLineUtils.executeCommandLine(cmd, out, err);
 
-            String output = out.getOutput() == null || out.getOutput().isEmpty()
+            String output = (StringUtils.isEmpty(out.getOutput())
                     ? null
-                    : '\n' + out.getOutput().trim();
+                    : '\n' + out.getOutput().trim());
 
             if (exitCode != 0) {
-                if (output != null && !output.isEmpty()) {
+                if (StringUtils.isNotEmpty(output)) {
                     getLog().info(output);
                 }
 
                 StringBuilder msg = new StringBuilder("\nExit code: ");
                 msg.append(exitCode);
-                if (err.getOutput() != null && !err.getOutput().isEmpty()) {
+                if (StringUtils.isNotEmpty(err.getOutput())) {
                     msg.append(" - ").append(err.getOutput());
                 }
                 msg.append('\n');
@@ -610,7 +610,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
                 throw new MojoExecutionException(msg.toString());
             }
 
-            if (output != null && !output.isEmpty()) {
+            if (StringUtils.isNotEmpty(output)) {
                 getLog().info(output);
             }
         } catch (CommandLineException e) {
@@ -621,7 +621,7 @@ public abstract class AbstractJDepsMojo extends AbstractMojo {
         // Handle JDeps warnings
         // ----------------------------------------------------------------------
 
-        if ((err.getOutput() != null && !err.getOutput().isEmpty()) && getLog().isWarnEnabled()) {
+        if (StringUtils.isNotEmpty(err.getOutput()) && getLog().isWarnEnabled()) {
             getLog().warn("JDeps Warnings");
 
             StringTokenizer token = new StringTokenizer(err.getOutput(), "\n");
