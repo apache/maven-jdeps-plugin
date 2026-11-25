@@ -17,24 +17,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-def buildLog = new File( basedir, 'build.log' )
 
-def found = false;
+def buildLog = new File(basedir, 'build.log')
+
+def found = false
 
 assert buildLog.readLines().each { String line ->
 
-  if ( line.startsWith( '[DEBUG] Executing: ' ) )
-  {
-    assert line.count( "classes" ) == 1 : "invalid classes count: " + line.count( "classes" )
+    if (line.startsWith('[DEBUG] Executing: ')) {
+        assert line.count("classes") == 1 : "invalid classes count: " + line.count("classes")
 
-    // Match any plexus-utils-<version>.jar rather than pinning an exact version,
-    // so future Dependabot bumps of this dependency don't need a matching edit here.
-    def plexusUtilsJarCount = ( line =~ /plexus-utils-\d+(\.\d+)*\.jar/ ).count
-    assert plexusUtilsJarCount == 1 : "invalid plexus-utils jar count: " + plexusUtilsJarCount
+        // Match any plexus-utils-<version>.jar rather than pinning an exact version,
+        // so future Dependabot bumps of this dependency don't need a matching edit here.
+        def plexusUtilsJarCount = (line =~ /plexus-utils-\d+(\.\d+)*\.jar/).count
+        assert plexusUtilsJarCount == 1 : "invalid plexus-utils jar count: " + plexusUtilsJarCount
 
-    found = true;
-  }
+        found = true
+    }
 }
 
 assert found == true : "Executing line not found"

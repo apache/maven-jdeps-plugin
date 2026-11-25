@@ -17,16 +17,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-def buildLog = new File( basedir, 'build.log' )
 
-def lines = buildLog.readLines().dropWhile{ !it.startsWith("classes -> ") }.takeWhile{ !it.startsWith( '[INFO]' ) }
+def buildLog = new File(basedir, 'build.log')
 
-  // classes -> java.base
-  //   org.apache.maven.plugins.jdeps.its                 -> java.io                                            java.base
+def lines = buildLog.readLines().dropWhile{
+    !it.startsWith("classes -> ")
+}.takeWhile{
+    !it.startsWith('[INFO]')
+}
 
-  // classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
-  //   org.apache.maven.plugins.jdeps.its (classes)
-  //      -> java.io  
+// classes -> java.base
+//   org.apache.maven.plugins.jdeps.its                 -> java.io                                            java.base
 
-assert lines.size() == ( lines[0] == 'classes -> java.base' ? 2 : 3  )
+// classes -> c:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar
+//   org.apache.maven.plugins.jdeps.its (classes)
+//      -> java.io
+
+assert lines.size() == (lines[0] == 'classes -> java.base' ? 2 : 3)

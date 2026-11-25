@@ -17,17 +17,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-def buildLog = new File( basedir, 'build.log' )
 
-def found = false;
+def buildLog = new File(basedir, 'build.log')
+
+def found = false
 
 buildLog.readLines().each { String line ->
 
-  if ( line.contains( 'Found offending packages' ) )
-  {
-    found = true;
-  }
+    if (line.contains('Found offending packages')) {
+        found = true
+    }
 }
 
 assert found : "No offending packages"
