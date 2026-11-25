@@ -17,7 +17,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-def buildLog = new File( basedir, 'build.log' )
 
-assert buildLog.readLines().dropWhile{ !(it =~ /Found offending packages\:$/) }.getAt(1) ==~ /\[ERROR\]\s+sun\.misc -> JDK (removed )?internal API.*/
+def buildLog = new File(basedir, 'build.log')
+
+assert buildLog.readLines().dropWhile{
+    !(it =~ /Found offending packages\:$/)
+}.getAt(1) ==~ /\[ERROR\]\s+sun\.misc -> JDK (removed )?internal API.*/

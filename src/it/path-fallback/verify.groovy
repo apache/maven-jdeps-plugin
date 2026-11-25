@@ -17,15 +17,15 @@
  * under the License.
  */
 
-def buildLog = new File( basedir, 'build.log' )
+def buildLog = new File(basedir, 'build.log')
 
 // Verify that the build succeeded even if JAVA_HOME was not explicitly set
 // This test validates the PATH fallback functionality
-def found = false;
+def found = false
 
 buildLog.eachLine { String line ->
-    if ( line.contains( 'BUILD SUCCESS' ) ) {
-        found = true;
+    if (line.contains('BUILD SUCCESS')) {
+        found = true
     }
 }
 
